@@ -7,10 +7,10 @@
 
     <com.vcredit.view.TitleBar
         android:id="@+id/iconfont_titlebar"
-        app:isTransparent="true"
-        app:titleType="withBackIcon"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        app:isTransparent="true"
+        app:titleType="withBackIcon" />
 
     <com.github.siyamed.shapeimageview.CircularImageView
         android:id="@+id/iv_login_icon"
@@ -21,8 +21,8 @@
         android:src="@mipmap/ic_launcher"
         app:layout_heightPercent="25%w"
         app:layout_widthPercent="25%w"
-        app:siBorderWidth="1dp"
-        app:siBorderColor="@color/img_si_border"/>
+        app:siBorderColor="@color/img_si_border"
+        app:siBorderWidth="1dp" />
 
     <TextView
         android:id="@+id/tv_login_name"
@@ -39,8 +39,7 @@
         android:layout_marginTop="45dp"
         android:fillViewport="true">
 
-        <com.zhy.android.percent.support.PercentRelativeLayout
-            style="@style/login_layout_content">
+        <com.zhy.android.percent.support.PercentRelativeLayout style="@style/login_layout_content">
 
             <com.zhy.android.percent.support.PercentLinearLayout
                 android:layout_width="match_parent"
@@ -72,8 +71,10 @@
                         android:layout_marginLeft="30dp"
                         android:layout_toRightOf="@id/tv_title"
                         android:background="@color/transparent"
+                        android:hint="@string/str_enter_mobile_number"
+                        android:maxLength="11"
                         android:singleLine="true"
-                        android:hint="@string/str_enter_mobile_number" />
+                        android:text="13412121212" />
 
                 </RelativeLayout>
 
@@ -107,7 +108,7 @@
                         android:layout_toRightOf="@id/tv_title"
                         android:background="@color/transparent"
                         android:hint="@string/hint_invalid_password"
-                        android:text="" />
+                        android:text="123456" />
 
                 </RelativeLayout>
 
@@ -129,7 +130,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentLeft="true"
                 android:layout_marginBottom="27dp"
-                android:text="@string/str_register"/>
+                android:text="@string/str_register" />
 
             <TextView
                 android:id="@+id/tv_forget_pwd"

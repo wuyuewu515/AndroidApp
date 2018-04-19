@@ -90,9 +90,11 @@ public class LaunchActivity extends BaseLoginActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        register();
-        instantiation();
-        initData();
+//        register();
+//        instantiation();
+//        initData();
+
+        openHomePage();
     }
 
     //注册动态广播，用于接收当前下载的apk的downloadId
@@ -188,7 +190,7 @@ public class LaunchActivity extends BaseLoginActivity {
             CommonUtils.LOG_D(getClass(), "result = " + result);
             switch (type) {
                 case VERSIONCODEENUM:
-                    getLastestResourceVer(result);
+                  //  getLastestResourceVer(result);
                     break;
                case LAUNCH_SYS_ENUM:
                     int lastVersion = Integer.valueOf(JsonUtils

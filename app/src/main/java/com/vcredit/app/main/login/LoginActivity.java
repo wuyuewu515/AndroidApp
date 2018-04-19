@@ -81,13 +81,15 @@ public class LoginActivity extends AbsBaseActivity implements TextWatcher {
                 if (!inputCheck()){
                     return;
                 }
+                //进行登录
+                openMainActivity();
 
-                Map<String, Object> map = new HashMap<>();
-                map.put("mobileNo", etPhone.getText().toString());
-                map.put("password", EncryptUtils.md5(etPassword.getText().toString()));
-                map.put("deviceId", CommonUtils.getIMEI(LoginActivity.this));
-                map.put("loginKind", Constants.LOGIN_KIND_NORMAL);
-                httpUtil.doPostByJson(HttpUtil.getServiceUrl(InterfaceConfig.LOGIN), map, loginRequestListener);
+//                Map<String, Object> map = new HashMap<>();
+//                map.put("mobileNo", etPhone.getText().toString());
+//                map.put("password", EncryptUtils.md5(etPassword.getText().toString()));
+//                map.put("deviceId", CommonUtils.getIMEI(LoginActivity.this));
+//                map.put("loginKind", Constants.LOGIN_KIND_NORMAL);
+//                httpUtil.doPostByJson(HttpUtil.getServiceUrl(InterfaceConfig.LOGIN), map, loginRequestListener);
             }
             break;
             case R.id.tv_forget_pwd: {//忘记密码

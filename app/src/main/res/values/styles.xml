@@ -68,11 +68,9 @@
     </style>
 
     <style name="nav_item_text_style">
-        <item name="android:layout_alignParentBottom">true</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_weight">35</item>
         <item name="android:textSize">@dimen/fontSize_10</item>
-        <item name="android:duplicateParentState">false</item>
         <item name="android:textColor">@color/font_nav_item</item>
     </style>
 
