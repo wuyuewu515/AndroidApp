@@ -1,0 +1,152 @@
+import com.android.build.gradle.internal.dsl.SigningConfig
+
+apply plugin: 'com.android.application'
+apply plugin: 'walle'
+
+android {
+    compileSdkVersion 25
+    defaultConfig {
+        applicationId "com.vcredit.app"
+        minSdkVersion 19
+        targetSdkVersion 25
+        versionCode 100
+        versionName "1.0.0"
+        multiDexEnabled = true
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        manifestPlaceholders = [
+                GETUI_APP_ID    : "2XErPLlBpj6rZzVjFjTAeA",
+                GETUI_APP_KEY   : "m7yDM5K73s8dgjpcMco0W9",
+                GETUI_APP_SECRET: "cWtIIDauRA9Pyz48v4Ylq7"]
+
+        ndk {
+            abiFilters "armeabi", "armeabi-v7a", "x86_64", "x86"
+        }
+
+    }
+
+
+
+    packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/DEPENDENCIES.txt'
+        exclude 'META-INF/DEPENDENCIES'
+    }
+
+    signingConfigs {
+        debug {
+            v1SigningEnabled true
+            v2SigningEnabled true
+        }
+    }
+
+
+    buildTypes {
+
+        debug {
+            minifyEnabled false
+            shrinkResources false
+            //实现自动签名
+            signingConfig getSignInfo("../config/releasesign.properties")
+            signingConfig signingConfigs.debug
+            //applicationIdSuffix ".debug"
+
+//            buildConfigField "String", "BASE_URL", "\"http://192.168.3.153:8090/index.php\""
+            buildConfigField "String", "BASE_URL", "\"http://mymall.nuonuojinfu.cn\""
+//            buildConfigField "String", "BASE_URL", "\"http://lhgj.nuonuojinfu.cn\""
+            buildConfigField "String", "BASE_SERVER", "\"abook\""
+        //    buildConfigField "String", "PROJECT_NAME", "\"" + projectName + "\""
+
+            buildConfigField "String", "BASE_H5_URL", "\"https://www.baidu.com/\""
+
+        }
+
+        release {
+            minifyEnabled false
+            signingConfig getSignInfo("../config/releasesign.properties")
+            signingConfig signingConfigs.debug
+
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField "String", "BASE_URL", "\"http://lhgj.nuonuojinfu.cn\""
+            buildConfigField "String", "BASE_SERVER", "\"abook\""
+            //      buildConfigField "String", "PROJECT_NAME", "\"" + projectName + "\""
+            buildConfigField "String", "BASE_H5_URL", "\"https://www.baidu.com/\""
+
+        }
+
+    }
+}
+
+
+def getDate() {
+    def date = new Date()
+    def formattedDate = date.format('MM_dd_HH_mm')
+    return formattedDate
+}
+
+walle {
+    // 指定渠道包的输出路径
+    apkOutputFolder = new File("${project.rootDir}/release/" + getDate())
+    // 定制渠道包的APK的文件名称
+    apkFileNameFormat = '${appName}_${channel}_${buildType}_' +
+            'v${versionCode}_${buildTime}.apk'
+    // 渠道配置文件
+    channelFile = new File("${project.rootDir}/config/markets.txt")
+}
+
+def getSignInfo(propFileName) {
+    def SigningConfig signingConfig = new SigningConfig("signInfo")
+    File propFile = file(propFileName);
+    if (propFile.exists()) {
+        def Properties props = new Properties()
+        props.load(new FileInputStream(propFile))
+        // signingConfig.v2SigningEnabled = props['V2SIGNINGENABLED']
+        signingConfig.storeFile = file(props['STORE_FILE'])
+        signingConfig.storePassword = props['STORE_PASSWORD']
+        signingConfig.keyAlias = props['KEY_ALIAS']
+        signingConfig.keyPassword = props['KEY_PASSWORD']
+        println('signConfig is exits')
+    } else {
+        println('sign config is null')
+        signingConfig = null
+    }
+    return signingConfig
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    //noinspection GradleCompatible
+    //    implementation 'com.android.support:appcompat-v7:26.0.0'
+        compile 'com.android.support:appcompat-v7:25.4.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+    //    testImplementation 'junit:junit:4.12'
+    //  androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    compile 'com.android.volley:volley:1.1.0'
+    compile 'com.google.code.gson:gson:2.8.0'
+    compile 'com.jakewharton:butterknife:8.6.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.6.0'
+    compile 'com.android.support:multidex:1.0.3'
+    compile 'com.zhy:percent-support-extends:1.1.1'
+    compile 'com.klinkerapps:link_builder:1.3.2@aar'
+    compile 'com.github.siyamed:android-shape-imageview:0.9.3@aar'
+    compile 'org.greenrobot:eventbus:3.0.0'
+    compile 'com.jakewharton:disklrucache:2.0.2'
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
+    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+    // 图像剪切
+    compile('com.kevin:crop:1.0.2') {
+        // 如果已经引入 support:appcompat-v7 可以加上这句话
+        exclude group: 'com.android.support', module: 'appcompat-v7'
+    }
+    //多渠道打包2代签名
+    compile 'com.meituan.android.walle:library:1.1.6'
+    //友盟统计
+    compile 'com.umeng.sdk:common:latest.integration'
+    compile 'com.umeng.sdk:analytics:latest.integration'
+}
