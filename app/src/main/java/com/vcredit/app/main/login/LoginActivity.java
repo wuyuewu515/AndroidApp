@@ -88,14 +88,14 @@ public class LoginActivity extends AbsBaseActivity implements TextWatcher {
                     return;
                 }
                 //进行登录
-                openMainActivity();
+                String imei = CommonUtils.getIMEI(mActivity);
+                Map<String, String> map = new HashMap<>();
+                map.put("mobile", etPhone.getText().toString());
+                //     map.put("password", EncryptUtils.md5(etPassword.getText().toString()));
+                map.put("password", etPassword.getText().toString());
+                map.put("deviceId", imei);
+                httpUtil.doPostByString(HttpUtil.getServiceUrl(InterfaceConfig.LOGIN), map, loginRequestListener);
 
-//                Map<String, Object> map = new HashMap<>();
-//                map.put("mobileNo", etPhone.getText().toString());
-//                map.put("password", EncryptUtils.md5(etPassword.getText().toString()));
-//                map.put("deviceId", CommonUtils.getIMEI(LoginActivity.this));
-//                map.put("loginKind", Constants.LOGIN_KIND_NORMAL);
-//                httpUtil.doPostByJson(HttpUtil.getServiceUrl(InterfaceConfig.LOGIN), map, loginRequestListener);
             }
             break;
             case R.id.tv_forget_pwd: {//忘记密码
@@ -115,12 +115,15 @@ public class LoginActivity extends AbsBaseActivity implements TextWatcher {
     protected RequestListener loginRequestListener = new AbsRequestListener(this) {
         @Override
         public void onSuccess(String result) {
-            UserData userData = JsonUtils.json2Object(result, UserData.class);
-            if (userData.isOperationResult()) {//登录成功
-                saveLoginInfo(userData);
-            } else {
-                TooltipUtils.showToastS(mActivity, userData);
-            }
+            openMainActivity();
+
+//            UserData userData = JsonUtils.json2Object(result, UserData.class);
+//            if (userData.isOperationResult()) {//登录成功
+//                saveLoginInfo(userData);
+//
+//            } else {
+//                TooltipUtils.showToastS(mActivity, userData);
+//            }
         }
     };
 

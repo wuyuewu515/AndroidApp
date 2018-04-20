@@ -38,38 +38,12 @@ public class InterfaceConfig {
 
 
     /** web接口地址 */
-    /**
-     * 服务器地址
-     */
-    public static final String SERVER_URL = BASE_URL_V + "/data/ws/rest/";
+
     /**
      * 用户登陆
      **/
-    public static final String LOGIN = "user/login";
-    /**
-     * 刷新账单数据
-     **/
-    public static final String SYSCONIZE_INFO = "user/sysconizeInfo";
-    /**
-     * 发送验证码
-     */
-    public static final String SEND_VERIFY_CODE = "common/random/send";
-    /**
-     * 普通用户注册
-     */
-    public static final String REGISTER = "user/register";
-    /**
-     * 重置密码
-     */
-    public static final String RESETPWD = "user/resetPwd";
-    /**
-     * 手机号校验
-     */
-    public static final String CHECKMOBILENO = "user/checkMobileNo";
-    /**
-     * 初始化申请步骤
-     */
-    public static final String INITAPPLYSTEP = "appCustomer/InitApplyStep";
+    public static final String LOGIN = "?app_act=user/user_login";
+
     /**
      * 获得资源最新版本
      */

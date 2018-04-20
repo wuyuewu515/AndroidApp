@@ -15,7 +15,9 @@ import com.vcredit.global.InterfaceConfig;
 import com.vcredit.utils.net.GetJsonRequest;
 import com.vcredit.utils.net.IMErrorListenr;
 import com.vcredit.utils.net.IMJsonListener;
+import com.vcredit.utils.net.IMStringListener;
 import com.vcredit.utils.net.PostJsonRequest;
+import com.vcredit.utils.net.PostStringRequest;
 import com.vcredit.utils.net.RequestListener;
 import com.vcredit.view.LoadingDialog;
 
@@ -132,6 +134,52 @@ public class HttpUtil {
     }
 
     /**
+     * postString请求
+     *
+     * @param url             服务器地址
+     * @param pramas          键值对的参数
+     * @param requestListener 网络请求
+     * @return
+     */
+
+    public Request<String> doPostByString(String url, Map<String, String> pramas,
+                                          RequestListener requestListener) {
+        return doPostByString(url, pramas, requestListener, true);
+    }
+
+    /**
+     * postString请求
+     *
+     * @param url               服务器地址
+     * @param pramas            键值对的参数
+     * @param requestListener   网络请求
+     * @param isOpenProgressbar 是否展示dialog
+     * @return
+     */
+    public Request<String> doPostByString(String url, Map<String, String> pramas,
+                                          RequestListener requestListener, boolean isOpenProgressbar) {
+        // 网络检查
+        if (!checkNetState(context)) {
+            Toast.makeText(context, R.string.net_error_check, Toast.LENGTH_SHORT)
+                    .show();
+            return null;
+        }
+
+        //添加固定的参数
+        pramas.put("token", "");
+
+        isShowProgressDialog(isOpenProgressbar);
+
+        PostStringRequest stringRequest = new PostStringRequest(url, pramas, new IMStringListener(requestListener,context),
+                new IMErrorListenr(requestListener));
+        Request<String> request = queue.add(stringRequest);
+
+        // 为请求添加context标记
+        request.setTag(context);
+        return request;
+    }
+
+    /**
      * getJson请求
      *
      * @param url
@@ -202,7 +250,7 @@ public class HttpUtil {
      * @return
      */
     public static String getServiceUrl(String str) {
-        return new StringBuffer(InterfaceConfig.SERVER_URL).append(str).toString();
+        return new StringBuffer(InterfaceConfig.BASE_URL).append(str).toString();
     }
 
     @Deprecated

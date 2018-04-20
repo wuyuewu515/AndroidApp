@@ -1,4 +1,5 @@
 <resources>
+    <string name="app_name">Android框架</string>
     <!-- 网络框架中网络异常相关描述 -->
     <string name="net_error_check">网络错误</string>
     <string name="net_error_timeout">网络连接超时</string>

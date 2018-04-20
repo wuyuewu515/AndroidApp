@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.zhy.android.percent.support.PercentLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -39,9 +39,10 @@
         android:layout_marginTop="45dp"
         android:fillViewport="true">
 
-        <com.zhy.android.percent.support.PercentRelativeLayout style="@style/login_layout_content">
+        <RelativeLayout
+            style="@style/login_layout_content">
 
-            <com.zhy.android.percent.support.PercentLinearLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
@@ -72,9 +73,10 @@
                         android:layout_toRightOf="@id/tv_title"
                         android:background="@color/transparent"
                         android:hint="@string/str_enter_mobile_number"
+                        android:inputType="phone"
                         android:maxLength="11"
                         android:singleLine="true"
-                        android:text="13412121212" />
+                        android:text="15601645052" />
 
                 </RelativeLayout>
 
@@ -122,7 +124,7 @@
                     android:layout_marginTop="30dp"
                     android:text="@string/str_login" />
 
-            </com.zhy.android.percent.support.PercentLinearLayout>
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/tv_register"
@@ -140,7 +142,7 @@
                 android:layout_marginBottom="27dp"
                 android:gravity="right"
                 android:text="@string/str_forget_pwd" />
-        </com.zhy.android.percent.support.PercentRelativeLayout>
+        </RelativeLayout>
     </ScrollView>
 
-</com.zhy.android.percent.support.PercentLinearLayout>
+</LinearLayout>

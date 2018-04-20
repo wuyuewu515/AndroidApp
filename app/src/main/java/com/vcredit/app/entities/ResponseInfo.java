@@ -7,10 +7,14 @@ import com.google.gson.annotations.SerializedName;
  * Created by shibenli on 2016/3/7.
  */
 public class ResponseInfo {
-    @SerializedName("resCode")
+
+    //{"code":2,"msg":"该手机号码不存在？是否注册","data":[]}
+
+
+    @SerializedName("code")
     @Expose
     public String resCode;
-    @SerializedName("resMsg")
+    @SerializedName("msg")
     @Expose
     public String resMsg;
 
