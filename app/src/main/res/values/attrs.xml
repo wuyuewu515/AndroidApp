@@ -100,6 +100,11 @@
         <attr name="clicked_textColor" format="color" />
     </declare-styleable>
 
+    <declare-styleable name="NavigationItem">
+        <attr name="navigation_text" format="string" />
+        <attr name="navigation_image" format="reference" />
+    </declare-styleable>
+
 
     <declare-styleable name="RoundProgressBar">
         <attr name="roundColor" format="color" />

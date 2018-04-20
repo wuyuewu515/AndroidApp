@@ -1,5 +1,6 @@
 package com.vcredit.utils;
 
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -25,18 +26,21 @@ import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
+import com.vcredit.app.BuildConfig;
 import com.vcredit.app.R;
-import com.vcredit.app.entities.SysEnumInfo;
 import com.vcredit.global.App;
 import com.vcredit.global.AppConfig;
 import com.vcredit.service.DownloadService;
 
 import org.apache.commons.lang3a.ArrayUtils;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -45,9 +49,8 @@ import java.util.Locale;
 /**
  * Created by wangzhengji on 2016/1/26.
  */
-public class CommonUtils {
-    // 自定义log参数
-    private static final String LOG_TAG = "StarCredit";
+public class CommonUtils {  // 自定义log参数
+    private static final String LOG_TAG = BuildConfig.APP_NAME;
     private static final int LOG_SIZE_LIMIT = 3500;
 
     // 定时器参数
@@ -58,11 +61,13 @@ public class CommonUtils {
     private static boolean mallowgetCode;
     private static boolean mispress;
 
-    public static int LOG_D(Class<?> paramClass, Object...msg) {
+    private static long lastClickTime;
+
+    public static int LOG_D(Class<?> paramClass, Object... msg) {
         String message = null;
         if (ArrayUtils.isEmpty(msg)) {
             message = "null or empty msg!";
-        }else{
+        } else {
             try {
                 message = String.format(msg[0].toString(), ArrayUtils.subarray(msg, 1, msg.length));
             } catch (Exception e) {
@@ -291,12 +296,11 @@ public class CommonUtils {
     /**
      * 显示发送验证码的弹出框,默认输入类型为数字、不自动弹出输入法
      *
-     *
-     * @param context  显示AlertDialog的上下文对象
-     * @param title    设置title，为null或者""时使用默认的
-     * @param hint     设置验证码输入框的hint，为null时使用默认
+     * @param context   显示AlertDialog的上下文对象
+     * @param title     设置title，为null或者""时使用默认的
+     * @param hint      设置验证码输入框的hint，为null时使用默认
      * @param hasButton 是否显示发送按钮
-     * @param listener AlertDialog的事件监听
+     * @param listener  AlertDialog的事件监听
      * @return
      */
     public static AlertDialog showDynamicCodeDialog(Context context, String title, String hint, boolean hasButton, final OnDynamicCodeDialogClickListener listener) {
@@ -351,7 +355,7 @@ public class CommonUtils {
                         case R.id.tv_dynamic_dialog_sure:
                             if (TextUtils.isEmpty(edtWithdrawCashDynamicCode.getText())) {
                                 TooltipUtils.showToastS(context, context.getString(R.string.verifycode_empty_tips));
-                            }else {
+                            } else {
                                 listener.onSure(tvWithdrawCashDynamicDialogSure, edtWithdrawCashDynamicCode);
                             }
                             break;
@@ -568,7 +572,7 @@ public class CommonUtils {
             byte[] d = getByte(reduce(imgPath, 720));
             // 将这个输入流以Base64格式编码为String
             return Base64.encodeToString(d, Base64.NO_WRAP);
-        }else {
+        } else {
             LOG_D(CommonUtils.class, "file(%s) not found ", imgPath);
             return "";
         }
@@ -604,25 +608,33 @@ public class CommonUtils {
         }
         return null;
     }
+
     /**
-     * 将系统枚举转化成对象
+     * 获取Assert文件内容
      *
      * @return
      */
-    public static SysEnumInfo analysisSysEnumsInfo() {
-        String json = SharedPreUtils.getInstance(App.getInstance())
-                .getValue(SharedPreUtils.APP_ENUM_INFO, "");
-        if (TextUtils.isEmpty(json)){
-            InputStream stream = App.getInstance().getClassLoader().getResourceAsStream("assets/sys_enum_info.txt");
+    public static String getAssertFileContent(String fileName) {
+        InputStream stream = App.getInstance().getClassLoader().getResourceAsStream("assets/" + fileName);
+        BufferedReader br = null;
+        try {
+            StringBuffer sb = new StringBuffer();
+            br = new BufferedReader(new InputStreamReader(stream));
+            String line;
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+            }
+            return sb.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
             try {
-                json = CommonUtils.inputStream2String(stream);
+                br.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        SysEnumInfo sysEnumsInfo = JsonUtils.json2Object(json,
-                SysEnumInfo.class);
-        return sysEnumsInfo;
+        return null;
     }
 
 
@@ -639,5 +651,71 @@ public class CommonUtils {
             return "";
         }
         return prex + cutString.substring(cutString.length() - retainDigit);
+    }
+
+    /**
+     * @return null may be returned if the specified process not found
+     */
+    public static String getProcessName(Context cxt, int pid) {
+        ActivityManager am = (ActivityManager) cxt.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningAppProcessInfo> runningApps = am.getRunningAppProcesses();
+        if (runningApps == null) {
+            return null;
+        }
+        for (ActivityManager.RunningAppProcessInfo procInfo : runningApps) {
+            if (procInfo.pid == pid) {
+                return procInfo.processName;
+            }
+        }
+        return null;
+    }
+
+    public synchronized static boolean isFastClick() {
+        long time = System.currentTimeMillis();
+        if ( time - lastClickTime < 500) {
+            return true;
+        }
+        lastClickTime = time;
+        return false;
+    }
+
+    /**
+     * 获取StatusBar的高度
+     * @param context
+     * @return 像素单位px
+     */
+    public static int getStatusBarHeight(Context context) {
+        Class<?> c = null;
+        Object obj = null;
+        Field field = null;
+        int x = 0, sbar = 0;
+        try {
+            c = Class.forName("com.android.internal.R$dimen");
+            obj = c.newInstance();
+            field = c.getField("status_bar_height");
+            x = Integer.parseInt(field.get(obj).toString());
+            sbar = context.getResources().getDimensionPixelSize(x);
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+        return sbar;
+    }
+
+    public static void openMap(Context context, String bankName){
+        try {
+            Uri gmmIntentUri = Uri.parse("geo:0,0?q=" + Uri.encode(bankName));
+            Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+            context.startActivity(mapIntent);
+        } catch (Exception e) {
+            String address = "address=" + bankName;
+            /**调用百度地图Web页面
+             * address=LocaltionAddress&src=YourAppName
+             */
+            String uristr = "http://api.map.baidu.com/geocoder?" + address
+                    + "&output=html&src=" + BuildConfig.APPLICATION_ID;
+            Uri uri = Uri.parse(uristr);
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            context.startActivity(intent);
+        }
     }
 }

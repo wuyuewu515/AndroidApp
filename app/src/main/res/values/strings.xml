@@ -84,6 +84,8 @@
     <!-- 账单 -->
     <string name="tab_bill_title">账单</string>
 
+    <!-- 首页 -->
+    <string name="tab_home_title">首页</string>
 
     <!-- 信用 -->
     <string name="tab_credit_title">信用</string>

@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import butterknife.BindView;
+
 import com.vcredit.app.R;
 import com.vcredit.app.entities.UserData;
 import com.vcredit.app.main.MainActivity;
@@ -56,17 +57,18 @@ public class LoginActivity extends AbsBaseActivity implements TextWatcher {
     protected void initData() {
         etPhone.addTextChangedListener(this);
         etPassword.addTextChangedListener(this);
+        btnLogin.setEnabled(!isTextViewHasNull(etPhone, etPassword));
     }
 
-    protected boolean inputCheck(){
+    protected boolean inputCheck() {
         String msg = null;
-        if (!VerifyUtils.isValidMobileNo(etPhone.getText().toString())){
+        if (!VerifyUtils.isValidMobileNo(etPhone.getText().toString())) {
             msg = getString(R.string.str_invalid_phone);
-        }else if (!VerifyUtils.isValidPwd(etPassword.getText().toString())){
+        } else if (!VerifyUtils.isValidPwd(etPassword.getText().toString())) {
             msg = getString(R.string.str_invalid_password);
         }
 
-        if (!TextUtils.isEmpty(msg)){
+        if (!TextUtils.isEmpty(msg)) {
             TooltipUtils.showToastS(this, msg);
             return false;
         }
@@ -78,7 +80,7 @@ public class LoginActivity extends AbsBaseActivity implements TextWatcher {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_login: {//登录
-                if (!inputCheck()){
+                if (!inputCheck()) {
                     return;
                 }
                 //进行登录
@@ -110,9 +112,9 @@ public class LoginActivity extends AbsBaseActivity implements TextWatcher {
         @Override
         public void onSuccess(String result) {
             UserData userData = JsonUtils.json2Object(result, UserData.class);
-            if (userData.isOperationResult()){//登录成功
+            if (userData.isOperationResult()) {//登录成功
                 saveLoginInfo(userData);
-            }else {
+            } else {
                 TooltipUtils.showToastS(mActivity, userData);
             }
         }

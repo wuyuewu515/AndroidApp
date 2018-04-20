@@ -17,8 +17,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.vcredit.app.R;
 import com.vcredit.app.main.MainActivity;
+
 
 /**
  * Created by shibenli on 2015/7/17.
@@ -64,20 +66,20 @@ public class TitleBar extends FrameLayout {
     }
 
     protected @LayoutRes
-    int getLayout(){
+    int getLayout() {
         return R.layout.common_titlebar2;
     }
 
-    protected TitleBar initView(Context context, AttributeSet attrs){
+    protected TitleBar initView(Context context, AttributeSet attrs) {
         LayoutInflater.from(context).inflate(getLayout(), this);
         if (context instanceof Activity)
             _activity = (Activity) context;
 
         instanceObjects(this);
 
-        if (attrs != null){
+        if (attrs != null) {
             TypedArray taCustom = context.obtainStyledAttributes(attrs, R.styleable.TitleBar);
-            int leftIcon = taCustom.getResourceId(R.styleable.TitleBar_leftIcon, R.mipmap.back_gray);
+            int leftIcon = taCustom.getResourceId(R.styleable.TitleBar_leftIcon, R.mipmap.iv_back);
             int rightIcon = taCustom.getResourceId(R.styleable.TitleBar_rightIcon, R.mipmap.gengduo);
             String rightText = taCustom.getString(R.styleable.TitleBar_rightText);
             int style = taCustom.getInt(R.styleable.TitleBar_titleType, 0);
@@ -87,7 +89,7 @@ public class TitleBar extends FrameLayout {
             setMiddleTitleText(titleMiddle);
             setRightText(rightText);
             isBackgroundTransparent(isTransparent);
-            switch (style){
+            switch (style) {
                 case withBackIcon: {
                     withBackIcon(leftIcon);
                 }
@@ -96,11 +98,11 @@ public class TitleBar extends FrameLayout {
                     setRightIcon(rightIcon);
                     setRightText(null);
                 }
-                    break;
+                break;
                 case withAllIcon: {
                     withBackIcon(leftIcon).setRightIcon(rightIcon);
                 }
-                    break;
+                break;
                 default: {
                     setRightIcon(rightIcon);
                 }
@@ -114,7 +116,7 @@ public class TitleBar extends FrameLayout {
     /**
      * 实例化对象
      */
-    protected void instanceObjects(View titleView){
+    protected void instanceObjects(View titleView) {
         llStatusBar = (StatusBarLayout) titleView.findViewById(R.id.title_statusBar);
         rlLayout = (RelativeLayout) titleView.findViewById(R.id.title_rlContainer);
         //暂时按照此方法修复部分机型上Titlebar背景在xml中使用默认时，设置无效的问题；
@@ -130,17 +132,17 @@ public class TitleBar extends FrameLayout {
         return titleView;
     }
 
-    public TitleBar withBackIcon(){
+    public TitleBar withBackIcon() {
         return withBackIcon(R.mipmap.back);
     }
 
-    public TitleBar withBackGrayIcon(){
+    public TitleBar withBackGrayIcon() {
         return withBackIcon(R.mipmap.back_gray);
     }
 
-    public TitleBar withBackIcon(@DrawableRes int resId){
+    public TitleBar withBackIcon(@DrawableRes int resId) {
         setLeftIcon(resId);
-        if (_activity != null){
+        if (_activity != null) {
             setLeftIconListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -152,9 +154,9 @@ public class TitleBar extends FrameLayout {
         return this;
     }
 
-    public TitleBar withHomeIcon(){
+    public TitleBar withHomeIcon() {
         setRightIcon(0);
-        if (_activity != null){
+        if (_activity != null) {
             setRightIconListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -173,6 +175,7 @@ public class TitleBar extends FrameLayout {
 
     /**
      * 设置文本标题
+     *
      * @param text
      * @return
      */
@@ -184,11 +187,12 @@ public class TitleBar extends FrameLayout {
 
     /**
      * 设置左侧图标
+     *
      * @param resId
      * @return
      */
     public TitleBar setLeftIcon(int resId) {
-        if (resId > 0){
+        if (resId > 0) {
             ivLeft.setImageResource(resId);
         }
         ivLeft.setVisibility(resId <= 0 ? View.GONE : View.VISIBLE);
@@ -197,11 +201,12 @@ public class TitleBar extends FrameLayout {
 
     /**
      * 设置右侧图标
+     *
      * @param resId
      * @return
      */
-    public TitleBar setRightIcon(int resId){
-        if (resId > 0){
+    public TitleBar setRightIcon(int resId) {
+        if (resId > 0) {
             ivRight.setImageResource(resId);
         }
         ivRight.setVisibility(resId <= 0 ? View.GONE : View.VISIBLE);
@@ -212,11 +217,11 @@ public class TitleBar extends FrameLayout {
      * 设置左侧图标点击处理函数
      */
     public TitleBar setLeftIconListener(OnClickListener listener) {
-        if(ivLeft.getVisibility() == View.VISIBLE){
+        if (ivLeft.getVisibility() == View.VISIBLE) {
             ivLeft.setOnClickListener(listener);
         }
 
-        if (tvLeft.getVisibility() == View.VISIBLE){
+        if (tvLeft.getVisibility() == View.VISIBLE) {
             tvLeft.setOnClickListener(listener);
         }
         return this;
@@ -235,7 +240,7 @@ public class TitleBar extends FrameLayout {
     /**
      * 设置右侧图标是否显示
      */
-    public TitleBar setRightIconVisibility(int visibility){
+    public TitleBar setRightIconVisibility(int visibility) {
         ivRight.setVisibility(visibility);
         return this;
     }
@@ -265,7 +270,7 @@ public class TitleBar extends FrameLayout {
      */
     public TitleBar setTitlebar(int leftIcon, OnClickListener leftCilckListener, String titleName,
                                 int rightIcon, OnClickListener rightClickListener) {
-        if(leftCilckListener == null){
+        if (leftCilckListener == null) {
             leftCilckListener = new OnClickListener() {
                 @Override
                 public void onClick(View arg0) {
@@ -283,15 +288,22 @@ public class TitleBar extends FrameLayout {
 
     /**
      * 设置标题栏的外观
+     *
      * @param width
      * @param height
      * @param backgroundColor
      * @return
      */
-    public TitleBar setTitlebar(int width, int height, int backgroundColor){
+    public TitleBar setTitlebar(int width, int height, int backgroundColor) {
         rlLayout.setLayoutParams(new LinearLayout.LayoutParams(width, height));
         llStatusBar.setBackgroundResource(backgroundColor);
         rlLayout.setBackgroundResource(backgroundColor);
+        return this;
+    }
+
+    public TitleBar setTitlebar(int backgroundColor) {
+//        rlLayout.setBackgroundResource(backgroundColor);
+        rlLayout.setBackgroundColor(backgroundColor);
         return this;
     }
 
@@ -304,26 +316,29 @@ public class TitleBar extends FrameLayout {
 
     /**
      * 设置标题栏透明
+     *
      * @return
      */
-    public TitleBar isBackgroundTransparent(){
+    public TitleBar isBackgroundTransparent() {
         return isBackgroundTransparent(true);
     }
 
     /**
      * 设置标题栏透明
+     *
      * @return
      */
-    public TitleBar isBackgroundTransparent(boolean flag){
+    public TitleBar isBackgroundTransparent(boolean flag) {
         return flag ? setTitleBackgroundColor(getResources().getColor(android.R.color.transparent)) : this;
     }
 
     /**
      * 设置标题栏的背景
+     *
      * @param color
      * @return
      */
-    public TitleBar setTitleBackgroundColor(int color){
+    public TitleBar setTitleBackgroundColor(int color) {
         llStatusBar.setBackgroundColor(color);
         rlLayout.setBackgroundColor(color);
         return this;
@@ -331,10 +346,11 @@ public class TitleBar extends FrameLayout {
 
     /**
      * 设置标题栏背景
+     *
      * @param resid
      * @return
      */
-    public TitleBar setTitleBackgroundResource(int resid){
+    public TitleBar setTitleBackgroundResource(int resid) {
         llStatusBar.setBackgroundResource(resid);
         rlLayout.setBackgroundResource(resid);
         return this;
@@ -342,10 +358,11 @@ public class TitleBar extends FrameLayout {
 
     /**
      * 设置左侧文字
+     *
      * @param text
      * @return
      */
-    public TitleBar setLeftText(String text){
+    public TitleBar setLeftText(String text) {
         if (TextUtils.isEmpty(text))
             tvLeft.setVisibility(View.INVISIBLE);
         else {

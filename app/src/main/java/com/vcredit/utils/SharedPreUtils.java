@@ -15,22 +15,52 @@ public class SharedPreUtils {
     //系统枚举
     public final static String APP_ENUM_INFO = "APP_ENUM_INFO";
     public final static String APP_PACKAGE_VERSION = "APP_PACKAGE_VERSION";
+    public final static String GUIDE_VERSION = "GUIDE_VERSION";
     public final static String USER_LOGINNAME = "USER_LOGINNAME";
     public final static String USER_AUTOLOGIN = "USER_AUTOLOGIN";
     public final static String DEVICENO = "DEVICENO";
+    public final static String SESSION_ID = "SEESION_ID";
+    public final static String LAST_MSG_ID = "LAST_MSG_ID";
     //下载id
-    public final static String DOWNLOADID="downLoadId";
+    public final static String DOWNLOADID = "downLoadId";
     private SharedPreferences sp;
     static private SharedPreUtils instance;
 
+
+    /**
+     * 初始化动作
+     * @param context
+     * @return
+     */
     static public SharedPreUtils getInstance(Context context) {
-        if (instance == null)
-            instance = new SharedPreUtils(context);
+        if (instance == null || instance.sp == null) {
+            instance = getInstance().init(context);
+        }
         return instance;
     }
 
-    private SharedPreUtils(Context context) {
-        sp = context.getSharedPreferences(CACHE, Context.MODE_PRIVATE);
+    /**
+     * 初始化成功之后，可以不需要Context直接使用
+     * @return
+     */
+    static public SharedPreUtils getInstance() {
+        if (instance == null) {
+            instance = new SharedPreUtils();
+        }
+        return instance;
+    }
+
+    private SharedPreUtils() {
+    }
+
+    /**
+     * 初始化
+     * @param context
+     */
+    public SharedPreUtils init(Context context){
+        sp = context.getApplicationContext().getSharedPreferences(CACHE, Context.MODE_PRIVATE);
+
+        return this;
     }
 
     /**
@@ -94,5 +124,16 @@ public class SharedPreUtils {
         Editor editor = sp.edit();
         editor.clear();
         editor.commit();
+    }
+
+    /**
+     * 清空所有数据
+     */
+    public void clearData(String key) {
+        Editor editor = sp.edit();
+        if (sp.contains(key)) {
+            editor.remove(key);
+            editor.commit();
+        }
     }
 }

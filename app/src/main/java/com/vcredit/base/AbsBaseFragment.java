@@ -1,5 +1,6 @@
 package com.vcredit.base;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -8,19 +9,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import butterknife.Unbinder;
+import com.vcredit.app.main.login.LoginActivity;
+import com.vcredit.global.App;
 import com.vcredit.global.OnClickFragmentListenner;
+import com.vcredit.global.Updateable;
 import com.vcredit.utils.CommonUtils;
 
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
 
 /**
  * Created by shibenli on 2016/5/30.
  */
-public abstract class AbsBaseFragment extends BaseFragment implements View.OnClickListener {
+public abstract class AbsBaseFragment extends BaseFragment implements View.OnClickListener, Updateable{
     final protected int REQUESTCODE_APPLYCREDIT = 0x0040;
 
     protected OnClickFragmentListenner fragmentListenner;
+
+    Unbinder unbinder;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,7 +49,7 @@ public abstract class AbsBaseFragment extends BaseFragment implements View.OnCli
         } else {
             removeViewFromParent(mainView);
         }
-        ButterKnife.bind(this, mainView);
+        unbinder = ButterKnife.bind(this, mainView);
         initView();
         return mainView;
     }
@@ -76,7 +83,7 @@ public abstract class AbsBaseFragment extends BaseFragment implements View.OnCli
     /**
      * 数据绑定
      */
-    protected abstract void dataBind();
+    protected void dataBind(){}
 
     protected void refreshView(){
 
@@ -88,6 +95,18 @@ public abstract class AbsBaseFragment extends BaseFragment implements View.OnCli
         refreshView();
     }
 
+    protected void requestLogin(int requestCode){
+        requestLogin(null, requestCode);
+    }
+
+    protected void requestLogin(Class clazz, int requestCode){
+        if (null != clazz && App.isLogined) {
+  //          AddMainActivity.launch(activity, clazz);
+        }else {
+            startActivityForResult(new Intent(activity, LoginActivity.class), requestCode);
+        }
+    }
+
     @Override
     public void onClick(View view) {
         CommonUtils.LOG_D(getClass(), view);
@@ -96,5 +115,10 @@ public abstract class AbsBaseFragment extends BaseFragment implements View.OnCli
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+    }
+
+    @Override
+    public void updateFragmentsStatus() {
+
     }
 }

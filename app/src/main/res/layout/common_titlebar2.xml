@@ -11,13 +11,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
-        android:background="@color/bg_titlbar" />
+        android:background="@color/bg_main" />
 
     <RelativeLayout
         android:id="@+id/title_rlContainer"
         android:layout_width="match_parent"
         android:layout_height="46dp"
-        android:background="@color/bg_titlbar">
+        android:background="@color/bg_main">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -43,9 +43,8 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:maxWidth="80dp"
-                android:text=""
                 android:singleLine="true"
-                android:textColor="@color/bg_main"
+                android:textColor="@color/divider_main_navigation"
                 android:textSize="@dimen/fontSize_18" />
         </LinearLayout>
 
@@ -56,9 +55,8 @@
             android:layout_centerInParent="true"
             android:gravity="center"
             android:maxWidth="224dp"
-            android:text=""
             android:singleLine="true"
-            android:textColor="@color/bg_main"
+            android:textColor="@color/divider_main_navigation"
             android:textSize="@dimen/fontSize_18" />
 
         <ImageView
@@ -77,10 +75,9 @@
             android:layout_alignParentRight="true"
             android:gravity="center_vertical"
             android:maxWidth="52dp"
-            android:text=""
             android:singleLine="true"
             android:layout_marginRight="16dp"
-            android:textColor="@color/bg_main"
+            android:textColor="@color/divider_main_navigation"
             android:textSize="@dimen/fontSize_14" />
 
     </RelativeLayout>

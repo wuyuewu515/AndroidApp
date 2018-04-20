@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:duplicateParentState="true">
+
+    <LinearLayout
+        android:id="@+id/layout_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:duplicateParentState="true"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/navigation_item_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/layout_item"
+            android:layout_toStartOf="@+id/navigation_item_count"
+            android:duplicateParentState="true"
+            android:src="@mipmap/my"
+            android:text="@string/tab_mine_title" />
+
+        <TextView
+            android:id="@+id/navigation_item_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:duplicateParentState="true"
+            android:gravity="center"
+            android:textColor="@color/font_nav_item"
+            android:text="@string/tab_mine_title"
+            android:textSize="@dimen/fontSize_10" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/navigation_item_count"
+        style="@style/tv_12_fff"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/layout_item"
+        android:layout_marginLeft="-5dp"
+        android:layout_marginTop="-3dp"
+        android:text="1"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:background="@drawable/shape_split_dotted_red_f56"
+        android:visibility="visible" />
+
+    <TextView
+        android:id="@+id/navigation_item_dot"
+        style="@style/tv_12_fff"
+        android:layout_width="7dp"
+        android:layout_height="7dp"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/layout_item"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="-3dp"
+        android:background="@drawable/shape_split_dotted_red_f56"
+        android:gravity="center"
+        android:visibility="gone" />
+
+</RelativeLayout>

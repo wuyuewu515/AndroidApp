@@ -5,8 +5,9 @@
     <color name="colorAccent">#FF4081</color>
     <color name="bg_titlbar">#60a8ee</color>
     <color name="bg_main">#e7efed</color>
+    <color name="bg_fff">#ffffff</color>
     <color name="transparent">#00000000</color>
-    <color name="activity_backgroud">@color/bg_main</color>
+    <color name="activity_backgroud">#e7efed</color>
 
     <!-- 字体 分割线等 黑 白 -->
     <color name="font_black">#333</color>
@@ -26,6 +27,7 @@
     <color name="btn_pressed">#4f99e1</color>
     <color name="btn_disable">#ddd</color>
     <color name="webview_btn_backgroud">#7fffffff</color>
+    <color name="font_red_f56">#F45762</color>
 
     <color name="xlistview_foot_divider">#999</color>
 

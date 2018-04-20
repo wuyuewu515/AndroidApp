@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_main">
+    android:background="@color/bg_fff">
 
     <!-- 子界面窗口 -->
 
@@ -11,68 +11,84 @@
         android:id="@+id/main_fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="50dp" >
-    </FrameLayout>
+        android:layout_marginBottom="50dp" />
 
     <!-- 底部导航栏 -->
 
-    <View
+    <include
+        layout="@layout/common_dividing_line"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/divider_main_navigation"
-        android:layout_above="@+id/main_layout_bottom"/>
+        android:layout_height="0.5dp"
+        android:layout_above="@+id/main_layout_bottom" />
+
 
     <LinearLayout
         android:id="@+id/main_layout_bottom"
         android:layout_width="match_parent"
         android:layout_height="49dp"
         android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:background="@color/bg_fff"
         android:gravity="center"
-        android:background="@color/bg_main"
         android:orientation="horizontal"
-        android:paddingTop="0.5dp" >
+        android:paddingTop="0.5dp">
 
-        <LinearLayout
-            android:id="@+id/main_tabBill"
-            android:layout_width="match_parent"
+
+        <com.vcredit.view.NavigationItem
+            android:id="@+id/main_tabDiscover"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            style="@style/nav_item_layout_style">
+            android:layout_weight="1"
+            app:navigation_image="@drawable/selecter_discover_image"
+            app:navigation_text="@string/tab_home_title" />
 
-            <TextView
-                android:id="@+id/main_textBill"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/nav_item_text_style"
-                android:text="@string/tab_bill_title"/>
-        </LinearLayout>
-
-        <LinearLayout
+        <com.vcredit.view.NavigationItem
             android:id="@+id/main_tabCredit"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            style="@style/nav_item_layout_style">
+            android:layout_weight="1"
+            app:navigation_image="@drawable/selecter_credit_image"
+            app:navigation_text="@string/tab_credit_title" />
 
-            <TextView
-                android:id="@+id/main_textCredit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/nav_item_text_style"
-                android:text="@string/tab_credit_title"/>
-        </LinearLayout>
+        <com.vcredit.view.NavigationItem
+            android:id="@+id/main_tabBill"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            app:navigation_image="@drawable/selecter_bill_image"
+            app:navigation_text="@string/tab_bill_title" />
 
-        <LinearLayout
+        <com.vcredit.view.NavigationItem
             android:id="@+id/main_tabMine"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            style="@style/nav_item_layout_style">
-
-            <TextView
-                android:id="@+id/main_textMine"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/nav_item_text_style"
-                android:text="@string/tab_mine_title"/>
-        </LinearLayout>
+            android:layout_weight="1"
+            app:navigation_image="@drawable/selecter_mine_image"
+            app:navigation_text="@string/tab_mine_title" />
     </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_guide"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/iv_guide_part1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="116dp"
+            android:src="@mipmap/guide_part_01" />
+
+        <ImageView
+            android:id="@+id/iv_guide_part2"
+            android:layout_width="135dp"
+            android:layout_height="45dp"
+            android:layout_below="@id/iv_guide_part1"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="41dp"
+            android:src="@mipmap/guide_part_02" />
+    </RelativeLayout>
 
 </RelativeLayout>

@@ -13,14 +13,6 @@ android {
         versionName "1.0.0"
         multiDexEnabled = true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        manifestPlaceholders = [
-                GETUI_APP_ID    : "2XErPLlBpj6rZzVjFjTAeA",
-                GETUI_APP_KEY   : "m7yDM5K73s8dgjpcMco0W9",
-                GETUI_APP_SECRET: "cWtIIDauRA9Pyz48v4Ylq7"]
-
-        ndk {
-            abiFilters "armeabi", "armeabi-v7a", "x86_64", "x86"
-        }
 
     }
 
@@ -57,9 +49,9 @@ android {
 
 //            buildConfigField "String", "BASE_URL", "\"http://192.168.3.153:8090/index.php\""
             buildConfigField "String", "BASE_URL", "\"http://mymall.nuonuojinfu.cn\""
-//            buildConfigField "String", "BASE_URL", "\"http://lhgj.nuonuojinfu.cn\""
-            buildConfigField "String", "BASE_SERVER", "\"abook\""
-        //    buildConfigField "String", "PROJECT_NAME", "\"" + projectName + "\""
+            buildConfigField "String", "BASE_SERVER", "\"\""
+            buildConfigField "String", "APP_NAME", "\"app_name\""
+            //    buildConfigField "String", "PROJECT_NAME", "\"" + projectName + "\""
 
             buildConfigField "String", "BASE_H5_URL", "\"https://www.baidu.com/\""
 
@@ -72,7 +64,9 @@ android {
 
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField "String", "BASE_URL", "\"http://lhgj.nuonuojinfu.cn\""
-            buildConfigField "String", "BASE_SERVER", "\"abook\""
+            buildConfigField "String", "APP_NAME", "\"app_name\""
+            buildConfigField "String", "BASE_SERVER", "\"\""
+
             //      buildConfigField "String", "PROJECT_NAME", "\"" + projectName + "\""
             buildConfigField "String", "BASE_H5_URL", "\"https://www.baidu.com/\""
 
@@ -121,7 +115,7 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     //noinspection GradleCompatible
     //    implementation 'com.android.support:appcompat-v7:26.0.0'
-        compile 'com.android.support:appcompat-v7:25.4.0'
+    compile 'com.android.support:appcompat-v7:25.4.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
     //    testImplementation 'junit:junit:4.12'
     //  androidTestImplementation 'com.android.support.test:runner:1.0.1'
