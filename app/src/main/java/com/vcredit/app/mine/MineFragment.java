@@ -2,6 +2,9 @@ package com.vcredit.app.mine;
 
 import com.vcredit.app.R;
 import com.vcredit.base.AbsBaseFragment;
+import com.vcredit.view.TitleBar;
+
+import butterknife.BindView;
 
 /**
  * 作者: 伍跃武
@@ -10,6 +13,9 @@ import com.vcredit.base.AbsBaseFragment;
  */
 
 public class MineFragment extends AbsBaseFragment {
+    @BindView(R.id.title_mine)
+    TitleBar titleMine;
+
     @Override
     protected int layout() {
         return R.layout.main_mine_fragment;
@@ -17,11 +23,13 @@ public class MineFragment extends AbsBaseFragment {
 
     @Override
     protected void initData() {
-
+        titleMine.setLeftIcon(0);
     }
 
     @Override
     protected void dataBind() {
 
     }
+
+
 }

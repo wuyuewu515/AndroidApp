@@ -2,6 +2,9 @@ package com.vcredit.app.home;
 
 import com.vcredit.app.R;
 import com.vcredit.base.AbsBaseFragment;
+import com.vcredit.view.TitleBar;
+
+import butterknife.BindView;
 
 /**
  * 作者: 伍跃武
@@ -10,6 +13,9 @@ import com.vcredit.base.AbsBaseFragment;
  */
 
 public class HomeFragment extends AbsBaseFragment {
+    @BindView(R.id.title_home)
+    TitleBar titleHome;
+
     @Override
     protected int layout() {
         return R.layout.main_start_fragment;
@@ -17,11 +23,13 @@ public class HomeFragment extends AbsBaseFragment {
 
     @Override
     protected void initData() {
-
+        titleHome.setLeftIcon(0);
     }
 
     @Override
     protected void dataBind() {
 
     }
+
+
 }

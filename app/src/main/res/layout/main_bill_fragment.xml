@@ -7,6 +7,7 @@
     android:orientation="vertical">
 
     <com.vcredit.view.TitleBar
+        android:id="@+id/title_bill"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:titleMiddle="账单" />
