@@ -98,7 +98,6 @@ def getSignInfo(propFileName) {
     if (propFile.exists()) {
         def Properties props = new Properties()
         props.load(new FileInputStream(propFile))
-        // signingConfig.v2SigningEnabled = props['V2SIGNINGENABLED']
         signingConfig.storeFile = file(props['STORE_FILE'])
         signingConfig.storePassword = props['STORE_PASSWORD']
         signingConfig.keyAlias = props['KEY_ALIAS']

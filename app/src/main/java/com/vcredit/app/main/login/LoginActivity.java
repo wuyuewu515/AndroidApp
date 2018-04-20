@@ -6,6 +6,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import butterknife.BindView;
 
@@ -15,6 +16,7 @@ import com.vcredit.app.main.MainActivity;
 import com.vcredit.app.main.common.PopWithWebViewActivity;
 import com.vcredit.app.main.common.ShowWithWebViewActivity;
 import com.vcredit.base.AbsBaseActivity;
+import com.vcredit.global.App;
 import com.vcredit.global.Constants;
 import com.vcredit.global.InterfaceConfig;
 import com.vcredit.utils.CommonUtils;
@@ -58,6 +60,8 @@ public class LoginActivity extends AbsBaseActivity implements TextWatcher {
         etPhone.addTextChangedListener(this);
         etPassword.addTextChangedListener(this);
         btnLogin.setEnabled(!isTextViewHasNull(etPhone, etPassword));
+
+        TooltipUtils.showToastL(mActivity, "当前的渠道号为:" + App.channel);
     }
 
     protected boolean inputCheck() {

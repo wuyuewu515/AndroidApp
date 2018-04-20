@@ -6,11 +6,15 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.support.multidex.MultiDexApplication;
 
+import com.meituan.android.walle.ChannelInfo;
+import com.meituan.android.walle.WalleChannelReader;
 import com.squareup.leakcanary.LeakCanary;
 import com.umeng.analytics.MobclickAgent;
 import com.vcredit.utils.CommonUtils;
 import com.vcredit.utils.SharedPreUtils;
 import com.vcredit.utils.TooltipUtils;
+
+import org.apache.commons.lang3a.StringUtils;
 
 import java.util.Stack;
 import java.util.Timer;
@@ -140,6 +144,15 @@ public class App extends MultiDexApplication {
         iconFont =  Typeface.createFromAsset(getAssets(), AppConfig.ICONFONT_PATH);
 
         MobclickAgent.setDebugMode(AppConfig.DEBUG);
+
+        // 如果没有使用PackerNg打包添加渠道，默认返回的是""
+        ChannelInfo channelInfo = WalleChannelReader.getChannelInfo(this.getApplicationContext());
+        if (channelInfo != null) {
+            String apkChannel = channelInfo.getChannel();
+            channel = StringUtils.isEmpty(apkChannel) ? "dev" : apkChannel;
+        } else {
+            channel = "dev";
+        }
 
         // 之后就可以使用了，比如友盟可以这样设置
    //     AnalyticsConfig.setChannel(channel);
