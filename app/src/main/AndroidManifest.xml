@@ -59,9 +59,24 @@
 
         <!--显示网页界面 -->
         <activity android:name="com.vcredit.app.main.common.ShowWithWebViewActivity" />
+        <!--更新下载页面 -->
+        <activity android:name=".main.launch.UpdateViewActivity" />
         <!--显示网页界面 -->
         <activity android:name="com.vcredit.app.main.common.PopWithWebViewActivity"
             android:theme="@style/dialogTheme"/>
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.vcredit.app.fileprovider"
+            android:grantUriPermissions="true"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths" />
+        </provider>
+
+
+
         <!-- 服务 - 更新下载服务 -->
         <service android:name="com.vcredit.service.DownloadService" />
 

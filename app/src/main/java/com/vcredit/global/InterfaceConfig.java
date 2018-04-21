@@ -34,7 +34,7 @@ public class InterfaceConfig {
     /**
      * 带版本的请求的域名
      */
-    public static final String BASE_URL_V =  BASE_URL + BuildConfig.BASE_SERVER;
+    public static final String BASE_URL_V = BASE_URL + BuildConfig.BASE_SERVER;
 
 
     /** web接口地址 */
@@ -45,13 +45,11 @@ public class InterfaceConfig {
     public static final String LOGIN = "?app_act=user/user_login";
 
     /**
-     * 获得资源最新版本
+     * 检查更新
      */
-    public static final String GETRESOURCEVER = "version/getResourceVer";
-    /**
-     * 获得最新安装包信息
-     */
-    public static final String GETLASTVERSIONS = "version/getLastVersion";
+    public static final String CHECK_UPDATE = "?app_act=index/check_update";
+
+
     /**
      * 获得系统枚举
      */

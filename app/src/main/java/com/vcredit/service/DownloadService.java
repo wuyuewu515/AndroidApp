@@ -16,6 +16,7 @@ import android.webkit.MimeTypeMap;
 import com.vcredit.app.BuildConfig;
 import com.vcredit.global.App;
 import com.vcredit.global.AppConfig;
+import com.vcredit.global.InterfaceConfig;
 import com.vcredit.utils.CommonUtils;
 import com.vcredit.utils.DownloadUtils;
 import com.vcredit.utils.SharedPreUtils;
@@ -64,9 +65,11 @@ public class DownloadService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent != null) {
             String url = intent.getStringExtra("downloadUrl");
-            fileName = intent.getStringExtra("fileName");
-            Environment.getExternalStoragePublicDirectory(AppConfig.FILEPATH).mkdirs();
-            download(url, fileName);
+      //      fileName = intent.getStringExtra("fileName");
+     //       Environment.getExternalStoragePublicDirectory(AppConfig.FILEPATH).mkdirs();
+       //     download(url, fileName);
+
+            download(url);
         }
         long lastDownLoadId = Long.valueOf(SharedPreUtils.getInstance(this).getValue(SharedPreUtils.DOWNLOADID, -1 + ""));
         if (-1 != lastDownLoadId) {
@@ -74,6 +77,38 @@ public class DownloadService extends Service {
             downloadId = lastDownLoadId;
         }
         return super.onStartCommand(intent, flags, startId);
+    }
+
+    private void download(String url) {
+
+        if (isDownloading(url)){
+            return;
+        }
+        //校验url是否正确
+        if(!VerifyUtils.isUrl(url)){
+            TooltipUtils.showToastS(getApplicationContext(),"下载地址不正确");
+            return;
+        }
+
+        //获得系统下载器
+        downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+        //设置下载地址
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+        //设置下载文件的类型
+        request.setMimeType("application/vnd.android.package-archive");
+        //设置下载存放的文件夹和文件名字
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "myApp.apk");
+        //设置下载时或者下载完成时，通知栏是否显示
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        request.setTitle("下载新版本");
+        //执行下载，并返回任务唯一id
+        downloadId = downloadManager.enqueue(request);
+
+        //把当前下载id发送给广播接收者
+        Intent intent = new Intent();
+        intent.putExtra("id",downloadId);
+        intent.setAction(ACTION_DOWNLOAD);
+        sendBroadcast(intent);
     }
 
     /** 下载 */
@@ -87,6 +122,8 @@ public class DownloadService extends Service {
             TooltipUtils.showToastS(getApplicationContext(),"下载地址不正确");
             return;
         }
+
+
         Uri uri = Uri.parse(url);
         //getContentResolver().registerContentObserver(uri,true,new DownloadObserver(handler,this,downloadid));
         DownloadManager.Request request = new DownloadManager.Request(uri);

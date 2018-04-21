@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.os.Build;
+import android.os.StrictMode;
 import android.support.multidex.MultiDexApplication;
 
 import com.meituan.android.walle.ChannelInfo;
@@ -25,12 +27,16 @@ import java.util.TimerTask;
  * Created by wangzhengji on 2016/1/26.
  */
 public class App extends MultiDexApplication {
-    /** 注销队列  */
+    /**
+     * 注销队列
+     */
     private static Stack<Activity> activityStack = new Stack<>();
 
-    /** 添加Activity到堆栈   */
+    /**
+     * 添加Activity到堆栈
+     */
     public void addActivity(Activity activity) {
-        if(activity != null && !activityStack.contains(activity)){
+        if (activity != null && !activityStack.contains(activity)) {
             activityStack.add(activity);
         }
     }
@@ -85,9 +91,10 @@ public class App extends MultiDexApplication {
         activityStack.clear();
     }
 
-    /** app退出 */
-    public void exit(Context context)
-    {
+    /**
+     * app退出
+     */
+    public void exit(Context context) {
         try {
             finishAllActivity();
             MobclickAgent.onKillProcess(this);
@@ -129,23 +136,27 @@ public class App extends MultiDexApplication {
         }
     }
 
-    /** 获得Application对象 */
+    /**
+     * 获得Application对象
+     */
     private static App appInstance;
+
     public static App getInstance() {
         return appInstance;
     }
+
     public static boolean isLogined = false;
     public static String channel = "unknown";
 
     @Override
     public void onCreate() {
         super.onCreate();
+
         appInstance = this;
-        iconFont =  Typeface.createFromAsset(getAssets(), AppConfig.ICONFONT_PATH);
+        iconFont = Typeface.createFromAsset(getAssets(), AppConfig.ICONFONT_PATH);
 
         MobclickAgent.setDebugMode(AppConfig.DEBUG);
 
-        // 如果没有使用PackerNg打包添加渠道，默认返回的是""
         ChannelInfo channelInfo = WalleChannelReader.getChannelInfo(this.getApplicationContext());
         if (channelInfo != null) {
             String apkChannel = channelInfo.getChannel();
@@ -155,25 +166,38 @@ public class App extends MultiDexApplication {
         }
 
         // 之后就可以使用了，比如友盟可以这样设置
-   //     AnalyticsConfig.setChannel(channel);
+        //     AnalyticsConfig.setChannel(channel);
 
-        if(AppConfig.DEBUG){
+        if (AppConfig.DEBUG) {
             LeakCanary.install(this);// 内存泄露检测工具
         }
     }
 
 
-    /** 获得当前App版本号 */
-    public int getVersionCode(){
+    /**
+     * 获得当前App版本号
+     */
+    public int getVersionCode() {
         return CommonUtils.getPackageInfo(this).versionCode;
     }
 
-    /** 获得当前App枚举版本号 */
-    public int getEnumsVer(){
+    /**
+     * 获得当前App版本号
+     */
+    public String getVersionName() {
+        return CommonUtils.getPackageInfo(this).versionName;
+    }
+
+    /**
+     * 获得当前App枚举版本号
+     */
+    public int getEnumsVer() {
         return Integer.valueOf(SharedPreUtils.getInstance(this)
                 .getValue(SharedPreUtils.APP_ENUM_VERSION, "1"));
     }
 
-    /** 使用的字体图标 */
+    /**
+     * 使用的字体图标
+     */
     public static Typeface iconFont;
 }
