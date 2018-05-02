@@ -1,5 +1,7 @@
 package com.vcredit.utils;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -14,6 +16,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.StatFs;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
@@ -472,20 +475,44 @@ public class CommonUtils {  // 自定义log参数
      */
     public static void startDownload(String url, Context context,
                                      String fileName, Float size) {
-        Float tempFileSize = size * 1024;
-        if (CommonUtils.detectSdcardIsExist()) {
-            if (CommonUtils.isAvaiableSpace(tempFileSize)) {
-                Intent intent = new Intent(context, DownloadService.class);
-                intent.putExtra("downloadUrl", url);
-                intent.putExtra("fileName", fileName);
-                context.startService(intent);
-                CommonUtils.LOG_D(CommonUtils.class, "startDownload");
-            } else {
-                TooltipUtils.showToastS(context, "存储卡空间不足");
-            }
-        } else {
-            TooltipUtils.showToastS(context, "请检查存储卡是否安装");
+
+
+        if (verifyStoragePermissions(context)) {
+            Intent intent = new Intent(context, DownloadService.class);
+            intent.putExtra("downloadUrl", url);
+            intent.putExtra("fileName", fileName);
+            context.startService(intent);
         }
+
+    }
+
+
+    // Storage Permissions
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE};
+
+    /**
+     * Checks if the app has permission to write to device storage
+     * If the app does not has permission then the user will be prompted to
+     * grant permissions
+     *
+     * @param activity
+     */
+    public static boolean verifyStoragePermissions(Context activity) {
+        // Check if we have write permission
+        int permission = ActivityCompat.checkSelfPermission(activity,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions((Activity) activity, PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE);
+
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -672,7 +699,7 @@ public class CommonUtils {  // 自定义log参数
 
     public synchronized static boolean isFastClick() {
         long time = System.currentTimeMillis();
-        if ( time - lastClickTime < 500) {
+        if (time - lastClickTime < 500) {
             return true;
         }
         lastClickTime = time;
@@ -681,6 +708,7 @@ public class CommonUtils {  // 自定义log参数
 
     /**
      * 获取StatusBar的高度
+     *
      * @param context
      * @return 像素单位px
      */
@@ -701,7 +729,7 @@ public class CommonUtils {  // 自定义log参数
         return sbar;
     }
 
-    public static void openMap(Context context, String bankName){
+    public static void openMap(Context context, String bankName) {
         try {
             Uri gmmIntentUri = Uri.parse("geo:0,0?q=" + Uri.encode(bankName));
             Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);

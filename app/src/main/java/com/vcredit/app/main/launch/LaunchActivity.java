@@ -16,26 +16,21 @@ import android.os.Message;
 import android.provider.Settings;
 import android.text.TextUtils;
 
-import com.vcredit.app.entities.ApkInfo;
-import com.vcredit.app.entities.ResourceVersionEntity;
 import com.vcredit.app.main.common.BaseLoginActivity;
 import com.vcredit.global.App;
 import com.vcredit.global.AppConfig;
 import com.vcredit.global.InterfaceConfig;
 import com.vcredit.service.DownloadObserver;
 import com.vcredit.service.DownloadService;
-import com.vcredit.utils.CommonUtils;
 import com.vcredit.utils.HttpUtil;
 import com.vcredit.utils.JsonUtils;
 import com.vcredit.utils.SharedPreUtils;
 import com.vcredit.utils.TooltipUtils;
 import com.vcredit.utils.net.AbsRequestListener;
-import com.vcredit.utils.net.RequestListener;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.WeakHashMap;
 
 
 /**
@@ -59,7 +54,6 @@ public class LaunchActivity extends BaseLoginActivity {
 
         }
     };
-    //private HttpUtil mHttpUtil;
     private boolean flag = false;
     private Intent mIntent;
     //是否要更新app
@@ -68,14 +62,7 @@ public class LaunchActivity extends BaseLoginActivity {
     private int sysEnumsVer;
     /*** 当前App版本号*/
     private int versionNo;
-    //获得资源最新版本
-    private static final int VERSIONCODEENUM = 1001;
-    //获得系统枚举
-    private static final int LAUNCH_SYS_ENUM = 1002;
-    //获得最新安装包信息
-    private static final int LAUNCH_APP_VER = 1003;
-    //是否要更新系统枚举
-    private boolean enumFlag;
+
     private boolean isDownloadFlag = false;
     private String downloadUrl;
     private boolean isDownloaded = false;
@@ -159,60 +146,9 @@ public class LaunchActivity extends BaseLoginActivity {
         }
     };
 
-//    //获得资源最新版本
-//    private void getResourceVer() {
-//        Map<String, Object> map = new WeakHashMap<>();
-//        httpUtil.doPostByJson(httpUtil.getServiceUrl(InterfaceConfig.GETRESOURCEVER),
-//                map, new CommRequestListener(VERSIONCODEENUM));
-//    }
-
-    //获得系统枚举
-    private void getAppEnums() {
-        Map<String, Object> map = new WeakHashMap<>();
-        httpUtil.doPostByJson(httpUtil.getServiceUrl(InterfaceConfig.GETAPPENUMS), map,
-                new CommRequestListener(LAUNCH_SYS_ENUM));
-    }
-
-
-
-    class CommRequestListener implements RequestListener {
-        private int type;
-
-        public CommRequestListener(int id) {
-            type = id;
-        }
-
-        @Override
-        public void onSuccess(String result) {
-            CommonUtils.LOG_D(getClass(), "result = " + result);
-            switch (type) {
-                case VERSIONCODEENUM:
-                    //  getLastestResourceVer(result);
-                    break;
-                case LAUNCH_SYS_ENUM:
-                    int lastVersion = Integer.valueOf(JsonUtils
-                            .getJSONObjectKeyVal(result, "versionCodeEnum"));
-                    saveSysEnumsVer(lastVersion, result);
-                    enumFlag = true;
-                    break;
-                case LAUNCH_APP_VER:
-                    versionFlag = isNewVersion(result);
-                    break;
-            }
-            finishLaunch();
-
-        }
-
-        @Override
-        public void onError(String printMe) {
-            TooltipUtils.showToastS(LaunchActivity.this, printMe);
-            finishLaunch();
-        }
-    }
-
 
     private void finishLaunch() {
-        if (enumFlag && versionFlag && !isDownloadFlag) {
+        if (versionFlag && !isDownloadFlag) {
             endSeconds = System.currentTimeMillis();
             // 　判断如果时间间隔小于2秒，最多2秒延时，否则不延时
             long seconds = 0;
@@ -242,37 +178,22 @@ public class LaunchActivity extends BaseLoginActivity {
 
 
     /**
-     * 检查枚举版本号是否有更新，如有则保存此次请求返回的Json枚举字符串
-     */
-    private void saveSysEnumsVer(int netVer, String json) {
-        instance.saveValue(
-                SharedPreUtils.APP_ENUM_INFO, json);
-        instance.saveValue(
-                SharedPreUtils.APP_ENUM_VERSION, String.valueOf(netVer));
-    }
-
-    /**
      * 检测app是否有版本更新，如有则弹窗提示用户
      */
     private boolean isNewVersion(String loadUrl) {
-//        ApkInfo versionsUpdateInfo = JsonUtils.json2Object(result,
-//                ApkInfo.class);
-   //     if (versionsUpdateInfo != null) {
-       if (!TextUtils.isEmpty(loadUrl)) {
+
+        if (!TextUtils.isEmpty(loadUrl)) {
             StringBuilder filePath = new StringBuilder();
-            filePath.append(Environment.getExternalStorageDirectory().getAbsolutePath());
-            filePath.append(File.separator);
-            filePath.append(AppConfig.FILEPATH);
+            filePath.append(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS));
             filePath.append(File.separator);
             filePath.append(AppConfig.APPNAME);
-            filePath.append("_v");
-       //     filePath.append(versionsUpdateInfo.getVersionName());
+            //     filePath.append("_v");
+            //     filePath.append(versionsUpdateInfo.getVersionName());
             filePath.append(".apk");
 
             File file = new File(filePath.toString());
             if (file.exists()) {
                 if (isDownloading(loadUrl)) {
-                    //TooltipUtils.showDialog(this, "正在下载新版本，请稍后...", null, null, null, null, false);
                     String id = instance.getValue(SharedPreUtils.DOWNLOADID, "-1");
                     if (Long.parseLong(id) != -1) {
                         displayProgressDialog();
@@ -330,6 +251,11 @@ public class LaunchActivity extends BaseLoginActivity {
      * 检查更新
      */
     private void checkUpdate() {
+
+        //由于部分手机在安装下载包的时候不会自动删除安装包，所以在使用的会存在需要更新的时候一直弹窗提示
+        //已经下载了app需要安装，所以需要服务器端回传最新包的版本号，在updateactivity中的 58行代码处
+
+
         Map<String, String> pramas = new HashMap<>();
         pramas.put("platform_type", "0");
         pramas.put("version", app.getVersionName());
@@ -337,40 +263,13 @@ public class LaunchActivity extends BaseLoginActivity {
         httpUtil.doPostByString(HttpUtil.getServiceUrl(InterfaceConfig.CHECK_UPDATE), pramas, new AbsRequestListener(mActivity) {
             @Override
             public void onSuccess(String result) {
-                TooltipUtils.showToastL(mActivity, "这是要更新了吗" + result);
+
                 String downLoad_url = JsonUtils.getJSONObjectKeyVal(result, "download_url");
                 isNewVersion(downLoad_url);
             }
         });
     }
 
-
-//    /**
-//     * 获取最新资源版本
-//     */
-//    private void getLastestResourceVer(String resVer) {
-//        // 获取当前APP版本号
-//        versionNo = CommonUtils.getAppVersionCode(this);
-//        // 从存储类中获得当前系统枚举版本号
-//        sysEnumsVer = Integer.valueOf(instance.getValue(SharedPreUtils.APP_ENUM_VERSION, "-1"));
-//        ResourceVersionEntity resourceVersionEntity = JsonUtils.json2Object(resVer, ResourceVersionEntity.class);
-//        if (resourceVersionEntity != null) {
-//            // app版本是否有更新
-//            AppConfig.netVer = resourceVersionEntity.getVersionCodeAndroid();
-//            if (AppConfig.netVer > versionNo) {
-//                getAppVer();
-//            } else {
-//                versionFlag = true;
-//            }
-//            // 系统枚举是否有更新
-//            int netSysEnumsVer = resourceVersionEntity.getVersionCodeEnum();
-//            if (netSysEnumsVer > sysEnumsVer) {
-//                getAppEnums();
-//            } else {
-//                enumFlag = true;
-//            }
-//        }
-//    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

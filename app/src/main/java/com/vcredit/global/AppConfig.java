@@ -12,7 +12,7 @@ public class AppConfig {
     /** 应用是否开启debug模式 */
     public static final boolean DEBUG = BuildConfig.DEBUG;
     /** 应用内部名称 */
-    public static final String APPNAME = "APP";
+    public static final String APPNAME = "myApp";
 
     /** app文件存放路径 */
     public static final String FILEPATH = Environment.DIRECTORY_DOWNLOADS+"app";

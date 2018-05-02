@@ -8,9 +8,11 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
 import android.os.StrictMode;
+import android.support.v4.BuildConfig;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
 
+import com.vcredit.global.AppConfig;
 import com.vcredit.service.DownloadService;
 
 import java.io.File;
@@ -57,14 +59,10 @@ public class DownloadUtils {
 //        }
 
 
-        //https://blog.csdn.net/github_2011/article/details/74297460
-        //https://blog.csdn.net/yulianlin/article/details/52775160
-        File file = new File(localFilePath);
-        String path = file.getAbsolutePath();
-        File dataDirectory = Environment.getDataDirectory();
+        File file = new File(
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+                ,  "/myApp.apk");
 
-        Log.i("TAG", "path路径是" + path);
-        Log.i("TAG", "dataDirectory路径是" + dataDirectory);
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) { // 安卓7.0以后采取新的更新模式
@@ -74,7 +72,6 @@ public class DownloadUtils {
             //对目标应用临时授权该Uri所代表的文件
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
-
 
         } else { //7.0以下依然按照原来的方法安装apk
             intent.setDataAndType(Uri.parse("file://" + localFilePath),

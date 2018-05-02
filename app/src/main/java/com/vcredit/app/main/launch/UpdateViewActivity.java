@@ -13,6 +13,8 @@ import com.vcredit.base.BaseActivity;
 import com.vcredit.global.App;
 import com.vcredit.global.AppConfig;
 import com.vcredit.utils.CommonUtils;
+import com.vcredit.utils.DownloadUtils;
+import com.vcredit.utils.TooltipUtils;
 
 
 /**
@@ -43,7 +45,7 @@ public class UpdateViewActivity extends BaseActivity {
     protected void instantiation() {
         intent = this.getIntent();
         downloadUrl = intent.getStringExtra("downloadUrl");
-        appSize = intent.getFloatExtra("appSize", 1f);
+        appSize = intent.getFloatExtra("appSize", 10f);
         netAppVersion = intent.getStringExtra("verNo");
         updateInfo = intent.getStringExtra("updateInfo");
         isDownloaded = intent.getBooleanExtra("isDownloaded", false);
@@ -65,8 +67,6 @@ public class UpdateViewActivity extends BaseActivity {
 
         dialog.show();
 
-        /*SharedPreUtils.getInstance(UpdateViewActivity.this).
-                saveValue(SharedPreUtils.NETAPPUPDATE, netAppVersion + "");*/
     }
 
     // 版本更新提示窗
@@ -79,14 +79,12 @@ public class UpdateViewActivity extends BaseActivity {
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
                 CommonUtils.startDownload(downloadUrl, UpdateViewActivity.this, fileName.toString(), appSize * 1024);
-//                arg0.cancel();
 
                 intent.putExtra("isFinish", true);
                 setResult(RESULT_OK, intent);
                 UpdateViewActivity.this.finish();
                 overridePendingTransition(0, 0);
-                //App.getInstance().exit(UpdateViewActivity.this);
-//                TooltipUtils.showToastL(UpdateViewActivity.this, "正在下载新版本，请稍后...");
+
             }
         });
         builder.setNegativeButton("下次再说", new DialogInterface.OnClickListener() {
@@ -117,7 +115,7 @@ public class UpdateViewActivity extends BaseActivity {
 
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
-                CommonUtils.installApkByGuide(UpdateViewActivity.this, downloadUrl);
+                DownloadUtils.installApkByGuide(UpdateViewActivity.this, downloadUrl);
                 intent.putExtra("isFinish", true);
                 setResult(RESULT_OK, intent);
                 UpdateViewActivity.this.finish();
