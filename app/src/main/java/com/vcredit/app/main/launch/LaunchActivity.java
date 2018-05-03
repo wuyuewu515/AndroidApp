@@ -17,9 +17,9 @@ import android.provider.Settings;
 import android.text.TextUtils;
 
 import com.vcredit.app.main.common.BaseLoginActivity;
-import com.vcredit.global.App;
 import com.vcredit.global.AppConfig;
 import com.vcredit.global.InterfaceConfig;
+import com.vcredit.global.SampleApplicationLike;
 import com.vcredit.service.DownloadObserver;
 import com.vcredit.service.DownloadService;
 import com.vcredit.utils.HttpUtil;
@@ -82,9 +82,9 @@ public class LaunchActivity extends BaseLoginActivity {
         super.onCreate(savedInstanceState);
         register();
         instantiation();
-        //     initData();
+        initData();
 
-        //   openHomePage();
+     //   openHomePage();
     }
 
     //注册动态广播，用于接收当前下载的apk的downloadId
@@ -120,7 +120,7 @@ public class LaunchActivity extends BaseLoginActivity {
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    checkUpdate();
+                checkUpdate();
                 }
             }, 200);
         }
@@ -142,7 +142,7 @@ public class LaunchActivity extends BaseLoginActivity {
         @Override
         public void onClick(DialogInterface dialog, int which) {
             LaunchActivity.this.finish();
-            App.getInstance().exit(LaunchActivity.this);
+            SampleApplicationLike.getInstance().exit(LaunchActivity.this);
         }
     };
 
@@ -259,7 +259,7 @@ public class LaunchActivity extends BaseLoginActivity {
         Map<String, String> pramas = new HashMap<>();
         pramas.put("platform_type", "0");
         pramas.put("version", app.getVersionName());
-        pramas.put("channel_code", App.channel);
+        pramas.put("channel_code", SampleApplicationLike.channel);
         httpUtil.doPostByString(HttpUtil.getServiceUrl(InterfaceConfig.CHECK_UPDATE), pramas, new AbsRequestListener(mActivity) {
             @Override
             public void onSuccess(String result) {
@@ -287,7 +287,7 @@ public class LaunchActivity extends BaseLoginActivity {
 
     @Override
     public void onBackPressed() {
-        App.getInstance().exitBy2Click(this);
+        SampleApplicationLike.getInstance().exitBy2Click(this);
     }
 
 

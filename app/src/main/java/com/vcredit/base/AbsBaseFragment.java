@@ -10,8 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.vcredit.app.main.login.LoginActivity;
-import com.vcredit.global.App;
 import com.vcredit.global.OnClickFragmentListenner;
+import com.vcredit.global.SampleApplicationLike;
 import com.vcredit.global.Updateable;
 import com.vcredit.utils.CommonUtils;
 
@@ -100,7 +100,7 @@ public abstract class AbsBaseFragment extends BaseFragment implements View.OnCli
     }
 
     protected void requestLogin(Class clazz, int requestCode){
-        if (null != clazz && App.isLogined) {
+        if (null != clazz && SampleApplicationLike.isLogined) {
   //          AddMainActivity.launch(activity, clazz);
         }else {
             startActivityForResult(new Intent(activity, LoginActivity.class), requestCode);

@@ -32,6 +32,11 @@ public class InterfaceConfig {
     public static final String BASE_URL = BuildConfig.BASE_URL;
 
     /**
+     * 当前是否为调试模式
+     */
+    public static final boolean ISDEBUG = BuildConfig.IS_DEBUG;
+
+    /**
      * 带版本的请求的域名
      */
     public static final String BASE_URL_V = BASE_URL + BuildConfig.BASE_SERVER;

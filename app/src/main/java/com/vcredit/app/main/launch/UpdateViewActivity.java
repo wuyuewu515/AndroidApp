@@ -9,12 +9,12 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 
 import com.vcredit.app.R;
+import com.vcredit.app.main.login.LoginActivity;
 import com.vcredit.base.BaseActivity;
-import com.vcredit.global.App;
 import com.vcredit.global.AppConfig;
+import com.vcredit.global.SampleApplicationLike;
 import com.vcredit.utils.CommonUtils;
 import com.vcredit.utils.DownloadUtils;
-import com.vcredit.utils.TooltipUtils;
 
 
 /**
@@ -101,7 +101,10 @@ public class UpdateViewActivity extends BaseActivity {
 
             @Override
             public void onCancel(DialogInterface arg0) {
-                App.getInstance().exit(UpdateViewActivity.this);
+                //   SampleApplicationLike.getInstance().exit(UpdateViewActivity.this);
+
+                LoginActivity.launch(mActivity, LoginActivity.class);
+                SampleApplicationLike.getInstance().finishAllActivity();
             }
         });
     }
@@ -138,7 +141,7 @@ public class UpdateViewActivity extends BaseActivity {
 
             @Override
             public void onCancel(DialogInterface arg0) {
-                App.getInstance().exit(UpdateViewActivity.this);
+                SampleApplicationLike.getInstance().exit(UpdateViewActivity.this);
 //                intent.putExtra("isFinish", true);
 //                setResult(RESULT_OK, intent);
 //                UpdateViewActivity.this.finish();

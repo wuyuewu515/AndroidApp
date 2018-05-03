@@ -7,8 +7,8 @@ import android.text.TextUtils;
 
 import com.vcredit.app.R;
 import com.vcredit.app.entities.ResultInfo;
-import com.vcredit.global.App;
 import com.vcredit.global.Constants;
+import com.vcredit.global.SampleApplicationLike;
 
 /**
  * Created by wangzhengji on 2015/8/25.
@@ -23,12 +23,12 @@ public class TooltipUtils {
      * @param negativeListener 取消按钮的实例化监听
      * @param positiveText     确定按钮的文字显示
      * @param negativeText     取消按钮的文字显示
-     * @return                 返回对话框实例
+     * @return 返回对话框实例
      */
     public synchronized static AlertDialog showDialog(Context context, String title,
-                                  DialogInterface.OnClickListener positiveListener,
-                                  DialogInterface.OnClickListener negativeListener,
-                                  String positiveText, String negativeText) {
+                                                      DialogInterface.OnClickListener positiveListener,
+                                                      DialogInterface.OnClickListener negativeListener,
+                                                      String positiveText, String negativeText) {
         return showDialog(context, title, positiveListener, negativeListener, positiveText, negativeText, true);
     }
 
@@ -42,13 +42,13 @@ public class TooltipUtils {
      * @param negativeListener 取消按钮的实例化监听
      * @param positiveText     确定按钮的文字显示
      * @param negativeText     取消按钮的文字显示
-     * @return                 返回对话框实例
+     * @return 返回对话框实例
      */
     public synchronized static AlertDialog showDialog(Context context, String title, String message,
-                                  DialogInterface.OnClickListener positiveListener,
-                                  DialogInterface.OnClickListener negativeListener,
-                                  String positiveText, String negativeText) {
-        return showDialog(context, title, message, positiveListener, negativeListener ,positiveText, negativeText, true);
+                                                      DialogInterface.OnClickListener positiveListener,
+                                                      DialogInterface.OnClickListener negativeListener,
+                                                      String positiveText, String negativeText) {
+        return showDialog(context, title, message, positiveListener, negativeListener, positiveText, negativeText, true);
     }
 
     /**
@@ -61,17 +61,18 @@ public class TooltipUtils {
      * @param positiveText     确定按钮的文字显示
      * @param negativeText     取消按钮的文字显示
      * @param touchOutside     是否支持点击外部取消
-     * @return                 返回对话框实例
+     * @return 返回对话框实例
      */
     public synchronized static AlertDialog showDialog(Context context, String title,
-                                  DialogInterface.OnClickListener positiveListener,
-                                  DialogInterface.OnClickListener negativeListener,
-                                  String positiveText, String negativeText, boolean touchOutside) {
+                                                      DialogInterface.OnClickListener positiveListener,
+                                                      DialogInterface.OnClickListener negativeListener,
+                                                      String positiveText, String negativeText, boolean touchOutside) {
         return showDialog(context, title, null, positiveListener, negativeListener, positiveText, negativeText, touchOutside);
     }
 
     /**
      * 通用创建dialog，默认支持按返回取消
+     *
      * @param context
      * @param title            弹框的标题
      * @param message          弹框的内容
@@ -80,17 +81,18 @@ public class TooltipUtils {
      * @param positiveText     确定按钮的文字显示
      * @param negativeText     取消按钮的文字显示
      * @param touchOutside     是否支持点击外部取消
-     * @return                 返回对话框实例
+     * @return 返回对话框实例
      */
     public synchronized static AlertDialog showDialog(Context context, String title, String message,
-                                  DialogInterface.OnClickListener positiveListener,
-                                  DialogInterface.OnClickListener negativeListener,
-                                  String positiveText, String negativeText, boolean touchOutside) {
+                                                      DialogInterface.OnClickListener positiveListener,
+                                                      DialogInterface.OnClickListener negativeListener,
+                                                      String positiveText, String negativeText, boolean touchOutside) {
         return showDialog(context, title, message, positiveListener, negativeListener, positiveText, negativeText, touchOutside, true);
     }
 
     /**
      * 通用创建dialog
+     *
      * @param context
      * @param title            弹框的标题
      * @param message          弹框的内容
@@ -100,12 +102,12 @@ public class TooltipUtils {
      * @param negativeText     取消按钮的文字显示
      * @param touchOutside     是否支持点击外部取消
      * @param cancelable       是否支持按返回取消
-     * @return                 返回对话框实例
+     * @return 返回对话框实例
      */
     public synchronized static AlertDialog showDialog(Context context, String title, String message,
-                                               DialogInterface.OnClickListener positiveListener,
-                                               DialogInterface.OnClickListener negativeListener,
-                                               String positiveText, String negativeText, boolean touchOutside, boolean cancelable) {
+                                                      DialogInterface.OnClickListener positiveListener,
+                                                      DialogInterface.OnClickListener negativeListener,
+                                                      String positiveText, String negativeText, boolean touchOutside, boolean cancelable) {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
         alertDialog.setPositiveButton(positiveText, positiveListener);
         alertDialog.setNegativeButton(negativeText, negativeListener);
@@ -118,12 +120,12 @@ public class TooltipUtils {
 
         // 包含内容的时候，设置Message
         boolean hasMsg = !TextUtils.isEmpty(message);
-        if (hasMsg){
+        if (hasMsg) {
             alertDialog.setMessage(message);
         }
 
         // 只要标题和内容有一个不是空就显示Dialog
-        if (hasTitle || hasMsg){
+        if (hasTitle || hasMsg) {
             AlertDialog dialog = alertDialog.create();
             dialog.setCanceledOnTouchOutside(touchOutside);
             dialog.setCancelable(cancelable);
@@ -144,7 +146,7 @@ public class TooltipUtils {
         showDialog(context, "确定退出？", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                App.getInstance().exit(context);
+                SampleApplicationLike.getInstance().exit(context);
             }
         }, null, "退出", "取消");
     }
@@ -152,11 +154,11 @@ public class TooltipUtils {
     /**
      * 短时间显示Toast消息，并保证运行在UI线程中
      *
-     * @param activity Activity
-     * @param resultInfo  消息内容
+     * @param activity   Activity
+     * @param resultInfo 消息内容
      */
     public static void showToastS(final Context activity, final ResultInfo resultInfo) {
-        if (Constants.DisplayLevel.DAILOG.equalsIgnoreCase(resultInfo.getDisplayLevel())){
+        if (Constants.DisplayLevel.DAILOG.equalsIgnoreCase(resultInfo.getDisplayLevel())) {
             TooltipUtils.showDialog(
                     activity,
                     activity.getResources().getString(R.string.common_tips_title),
@@ -165,7 +167,7 @@ public class TooltipUtils {
                     null,
                     activity.getResources().getString(R.string.common_sure),
                     null);
-        }else{
+        } else {
             TooltipUtils.showToastS(activity, resultInfo.getDisplayInfo());
         }
     }
@@ -182,6 +184,7 @@ public class TooltipUtils {
 
     /**
      * 延时Toast，延时单位毫秒
+     *
      * @param activity
      * @param message
      * @param delay
@@ -202,6 +205,7 @@ public class TooltipUtils {
 
     /**
      * 延时Toast，延时单位毫秒
+     *
      * @param activity
      * @param message
      * @param delay
@@ -229,6 +233,7 @@ public class TooltipUtils {
 
     /**
      * 延时Toast，延时单位毫秒
+     *
      * @param activity
      * @param message
      * @param time
@@ -243,7 +248,7 @@ public class TooltipUtils {
     /**
      * 关闭Toast
      */
-    public static void cancelAllToast(){
+    public static void cancelAllToast() {
         try {
             ToastUtil.cancelAll();
         } catch (Exception e) {

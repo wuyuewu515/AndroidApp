@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.umeng.analytics.MobclickAgent;
 import com.vcredit.app.entities.UserData;
-import com.vcredit.global.App;
+import com.vcredit.global.SampleApplicationLike;
 import com.vcredit.utils.CommonUtils;
 import com.vcredit.utils.HttpUtil;
 import com.vcredit.utils.TooltipUtils;
@@ -33,7 +33,7 @@ public class BaseActivity extends FragmentActivity {
     /**
      * 保留app引用
      */
-    protected App app;
+    protected SampleApplicationLike app;
 
     protected HttpUtil httpUtil;
 
@@ -98,7 +98,7 @@ public class BaseActivity extends FragmentActivity {
      * @param savedInstanceState
      */
     protected void refreshData(Bundle savedInstanceState) {
-        app = App.getInstance();
+        app = SampleApplicationLike.getInstance();
         mActivity = this;
         app.addActivity(this);
         httpUtil = HttpUtil.getInstance(this);

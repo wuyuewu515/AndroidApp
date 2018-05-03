@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.vcredit.app.entities.UserData;
-import com.vcredit.global.App;
+import com.vcredit.global.SampleApplicationLike;
 import com.vcredit.utils.CommonUtils;
 import com.vcredit.utils.HttpUtil;
 import com.vcredit.utils.InputTools;
@@ -33,7 +33,7 @@ public class BaseFragment extends Fragment {
     /**
      * 保留app引用
      */
-    protected App app;
+    protected SampleApplicationLike app;
 
     /**
      * 保留Activity引用
@@ -94,7 +94,7 @@ public class BaseFragment extends Fragment {
      * @param savedInstanceState
      */
     protected void refreshData(Bundle savedInstanceState) {
-        app = App.getInstance();
+        app = SampleApplicationLike.getInstance();
         activity = getActivity();
 		httpUtil = HttpUtil.getInstance(activity);
         if (null != savedInstanceState) {

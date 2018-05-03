@@ -12,7 +12,7 @@ import android.os.Environment;
 import android.os.IBinder;
 
 import com.vcredit.app.BuildConfig;
-import com.vcredit.global.App;
+import com.vcredit.global.SampleApplicationLike;
 import com.vcredit.utils.DownloadUtils;
 import com.vcredit.utils.SharedPreUtils;
 import com.vcredit.utils.TooltipUtils;
@@ -138,7 +138,7 @@ public class DownloadService extends Service {
             }
             c.close();
             //下载完成  退出app
-            App.getInstance().exit(getApplicationContext());
+            SampleApplicationLike.getInstance().exit(getApplicationContext());
             // SharedPreUtils.getInstance(DownloadService.this).saveValue(SharedPreUtils.DOWNLOADID,"-1");
         }
     }

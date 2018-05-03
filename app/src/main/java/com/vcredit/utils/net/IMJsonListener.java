@@ -11,8 +11,8 @@ import com.umeng.analytics.MobclickAgent;
 import com.vcredit.app.BuildConfig;
 import com.vcredit.app.R;
 import com.vcredit.app.entities.ResponseInfo;
-import com.vcredit.global.App;
 import com.vcredit.app.main.login.LoginActivity;
+import com.vcredit.global.SampleApplicationLike;
 import com.vcredit.utils.CommonUtils;
 import com.vcredit.utils.JsonUtils;
 import com.vcredit.utils.SharedPreUtils;
@@ -74,11 +74,11 @@ public class IMJsonListener implements Response.Listener<JSONObject> {
                         Intent intent = new Intent(mContext, LoginActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         intent.putExtra("GOTO", "");
-                        App.isLogined = false;
+                        SampleApplicationLike.isLogined = false;
                         mContext.startActivity(intent);
                         SharedPreUtils.getInstance(mContext).saveValue(SharedPreUtils.USER_AUTOLOGIN, false);
 
-                        App.getInstance().finishAllActivity();
+                        SampleApplicationLike.getInstance().finishAllActivity();
                     }
                 };
                 TooltipUtils.showDialog(mContext,res.getString(R.string.common_tips_title), res.getString(R.string.net_token_error),

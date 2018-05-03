@@ -19,6 +19,7 @@ import com.vcredit.base.AbsBaseActivity;
 import com.vcredit.base.AbsBaseFragment;
 import com.vcredit.global.App;
 import com.vcredit.global.OnTabItemClickListenner;
+import com.vcredit.global.SampleApplicationLike;
 import com.vcredit.global.Updateable;
 import com.vcredit.utils.CommonUtils;
 import com.vcredit.utils.SharedPreUtils;
@@ -293,7 +294,8 @@ public class MainActivity extends AbsBaseActivity implements Updateable {
 
     @Override
     public void onBackPressed() {
-        App.getInstance().exitBy2Click(this);
+        //App.getInstance().exitBy2Click(this);
+        SampleApplicationLike.getInstance().exitBy2Click(this);
     }
 
 

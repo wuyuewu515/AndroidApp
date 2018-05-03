@@ -6,9 +6,6 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import butterknife.BindView;
 
 import com.vcredit.app.R;
 import com.vcredit.app.entities.UserData;
@@ -16,13 +13,10 @@ import com.vcredit.app.main.MainActivity;
 import com.vcredit.app.main.common.PopWithWebViewActivity;
 import com.vcredit.app.main.common.ShowWithWebViewActivity;
 import com.vcredit.base.AbsBaseActivity;
-import com.vcredit.global.App;
-import com.vcredit.global.Constants;
 import com.vcredit.global.InterfaceConfig;
+import com.vcredit.global.SampleApplicationLike;
 import com.vcredit.utils.CommonUtils;
-import com.vcredit.utils.EncryptUtils;
 import com.vcredit.utils.HttpUtil;
-import com.vcredit.utils.JsonUtils;
 import com.vcredit.utils.SharedPreUtils;
 import com.vcredit.utils.TooltipUtils;
 import com.vcredit.utils.VerifyUtils;
@@ -32,6 +26,7 @@ import com.vcredit.utils.net.RequestListener;
 import java.util.HashMap;
 import java.util.Map;
 
+import butterknife.BindView;
 import butterknife.OnClick;
 
 /**
@@ -61,7 +56,10 @@ public class LoginActivity extends AbsBaseActivity implements TextWatcher {
         etPassword.addTextChangedListener(this);
         btnLogin.setEnabled(!isTextViewHasNull(etPhone, etPassword));
 
-        TooltipUtils.showToastL(mActivity, "当前的渠道号为:" + App.channel);
+        TooltipUtils.showToastL(mActivity, "当前的渠道号为:" + SampleApplicationLike.channel);
+
+//        if (InterfaceConfig.ISDEBUG)
+//            TooltipUtils.showToastL(mActivity, "当前的渠道号为:" + SampleApplicationLike.channel);
     }
 
     protected boolean inputCheck() {

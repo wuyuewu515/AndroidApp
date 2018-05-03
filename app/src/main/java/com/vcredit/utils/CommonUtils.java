@@ -31,8 +31,8 @@ import android.widget.TextView;
 
 import com.vcredit.app.BuildConfig;
 import com.vcredit.app.R;
-import com.vcredit.global.App;
 import com.vcredit.global.AppConfig;
+import com.vcredit.global.SampleApplicationLike;
 import com.vcredit.service.DownloadService;
 
 import org.apache.commons.lang3a.ArrayUtils;
@@ -642,7 +642,7 @@ public class CommonUtils {  // 自定义log参数
      * @return
      */
     public static String getAssertFileContent(String fileName) {
-        InputStream stream = App.getInstance().getClassLoader().getResourceAsStream("assets/" + fileName);
+        InputStream stream = SampleApplicationLike.getInstance().getApplication().getClassLoader().getResourceAsStream("assets/" + fileName);
         BufferedReader br = null;
         try {
             StringBuffer sb = new StringBuffer();

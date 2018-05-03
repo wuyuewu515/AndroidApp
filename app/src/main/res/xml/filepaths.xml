@@ -1,7 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <paths>
-        <external-path path="" name="download" />
+        <!--app自动更新部分 -->
+        <external-path
+            name="download"
+            path="" />
+
+        <!-- 热更新部分-->
+        <!-- /storage/emulated/0/Download/${applicationId}/.beta/apk-->
+        <external-path
+            name="beta_external_path"
+            path="Download/" />
+        <!--/storage/emulated/0/Android/data/${applicationId}/files/apk/-->
+        <external-path
+            name="beta_external_files_path"
+            path="Android/data/" />
     </paths>
     <!--
         <files-path name="name" path="path" /> 物理路径相当于Context.getFilesDir() + /path/
