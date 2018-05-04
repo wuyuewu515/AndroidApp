@@ -259,7 +259,7 @@ public class LaunchActivity extends BaseLoginActivity {
         Map<String, String> pramas = new HashMap<>();
         pramas.put("platform_type", "0");
         pramas.put("version", app.getVersionName());
-        pramas.put("channel_code", SampleApplicationLike.channel);
+        pramas.put("channel_code", "dev");
         httpUtil.doPostByString(HttpUtil.getServiceUrl(InterfaceConfig.CHECK_UPDATE), pramas, new AbsRequestListener(mActivity) {
             @Override
             public void onSuccess(String result) {

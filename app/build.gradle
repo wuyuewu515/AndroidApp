@@ -37,22 +37,27 @@ android {
     }
 
     signingConfigs {
-        debug {
-            v1SigningEnabled true
+
+        release {
             v2SigningEnabled true
+            v1SigningEnabled true
         }
+
+
     }
 
 
     buildTypes {
 
+
         debug {
             minifyEnabled false
             shrinkResources false
+            debuggable true
+            signingConfig signingConfigs.release
             //实现自动签名
             signingConfig getSignInfo("../config/releasesign.properties")
-            signingConfig signingConfigs.debug
-            //applicationIdSuffix ".debug"
+            applicationIdSuffix ".debug"
 
             buildConfigField "String", "BASE_URL", "\"http://mymall.nuonuojinfu.cn/\""
             buildConfigField "String", "BASE_SERVER", "\"\""
@@ -62,12 +67,11 @@ android {
             buildConfigField "String", "BASE_H5_URL", "\"https://www.baidu.com/\""
 
         }
-
         release {
             minifyEnabled true
             shrinkResources true
+            signingConfig signingConfigs.release
             signingConfig getSignInfo("../config/releasesign.properties")
-            signingConfig signingConfigs.debug
 
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField "String", "BASE_URL", "\"http://mymall.nuonuojinfu.cn/\""
