@@ -19,8 +19,6 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="64dp"
         android:src="@mipmap/ic_launcher"
-        app:layout_heightPercent="25%w"
-        app:layout_widthPercent="25%w"
         app:siBorderColor="@color/img_si_border"
         app:siBorderWidth="1dp" />
 
