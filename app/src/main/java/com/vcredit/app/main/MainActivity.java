@@ -17,7 +17,6 @@ import com.vcredit.app.main.login.LoginActivity;
 import com.vcredit.app.mine.MineFragment;
 import com.vcredit.base.AbsBaseActivity;
 import com.vcredit.base.AbsBaseFragment;
-import com.vcredit.global.App;
 import com.vcredit.global.OnTabItemClickListenner;
 import com.vcredit.global.SampleApplicationLike;
 import com.vcredit.global.Updateable;

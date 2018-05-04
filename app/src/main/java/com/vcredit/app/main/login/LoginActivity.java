@@ -57,7 +57,7 @@ public class LoginActivity extends AbsBaseActivity implements TextWatcher {
         etPassword.addTextChangedListener(this);
         btnLogin.setEnabled(!isTextViewHasNull(etPhone, etPassword));
 
-    //    TooltipUtils.showToastL(mActivity, "当前的版本是dev" + BuildConfig.DEBUG + ",渠道号为:" + SampleApplicationLike.channel);
+        TooltipUtils.showToastL(mActivity, "当前的版本是" + BuildConfig.DEBUG + ",渠道号为:" + SampleApplicationLike.channel);
 
 //        if (InterfaceConfig.ISDEBUG)
 //            TooltipUtils.showToastL(mActivity, "当前的渠道号为:" + SampleApplicationLike.channel);

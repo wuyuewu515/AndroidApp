@@ -50,6 +50,11 @@ public class InterfaceConfig {
     public static final String LOGIN = "?app_act=user/user_login";
 
     /**
+     * 获取首页数据
+     **/
+    public static final String HOME = "?app_act=index/home_page";
+
+    /**
      * 检查更新
      */
     public static final String CHECK_UPDATE = "?app_act=index/check_update";

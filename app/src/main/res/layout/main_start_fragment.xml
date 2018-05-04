@@ -12,9 +12,23 @@
         android:layout_height="wrap_content"
         app:titleMiddle="首页" />
 
-    <TextView
-        android:layout_width="wrap_content"
+    <Button
+        android:id="@+id/btn_getMesage"
+        style="@style/btn_style_1_1"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="这个是首页啊" />
+        android:enabled="true"
+        android:text="获取数据" />
+
+    <Button
+        android:id="@+id/btn_showMessage"
+        style="@style/btn_style_1_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btn_getMesage"
+        android:layout_marginTop="10dp"
+        android:enabled="true"
+        android:text="显示数据" />
+
 </RelativeLayout>
