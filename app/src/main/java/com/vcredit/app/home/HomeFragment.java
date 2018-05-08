@@ -7,21 +7,14 @@ import com.vcredit.app.entities.UrlCacheBean;
 import com.vcredit.app.entities.UrlCacheBeanDao;
 import com.vcredit.base.AbsBaseFragment;
 import com.vcredit.global.InterfaceConfig;
-import com.vcredit.utils.CommonUtils;
 import com.vcredit.utils.EncryptUtils;
 import com.vcredit.utils.HttpUtil;
 import com.vcredit.utils.TooltipUtils;
 import com.vcredit.utils.net.AbsRequestListener;
 import com.vcredit.view.TitleBar;
 
-import org.greenrobot.greendao.Property;
-import org.greenrobot.greendao.query.WhereCondition;
-
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
-import javax.crypto.Mac;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -55,6 +48,7 @@ public class HomeFragment extends AbsBaseFragment {
     @Override
     protected void dataBind() {
         urlCacheBeanDao = app.getDaoSession().getUrlCacheBeanDao();
+        url = EncryptUtils.md5(HttpUtil.getServiceUrl(InterfaceConfig.HOME));
     }
 
 
@@ -70,23 +64,26 @@ public class HomeFragment extends AbsBaseFragment {
                     @Override
                     public void onSuccess(String result) {
                         TooltipUtils.showToastL(activity, result);
-                        url = EncryptUtils.md5(HttpUtil.getServiceUrl(InterfaceConfig.HOME));
-                        UrlCacheBean bean = new UrlCacheBean(url, result);
+
+                        //如果数据库中有这个数据，就更新
+                        UrlCacheBean unique = urlCacheBeanDao.queryBuilder().where(UrlCacheBeanDao.Properties.UrlMd5.eq(url)).build().unique();
+                        UrlCacheBean bean;
+                        if (null != unique) {
+                            long id = unique.getId();
+                            bean = new UrlCacheBean(id, url, result);
+                        } else {
+                            bean = new UrlCacheBean(null, url, result);
+                        }
                         urlCacheBeanDao.save(bean);
                     }
                 });
             }
             break;
             case R.id.btn_showMessage: {
-                Property property = urlCacheBeanDao.getPkProperty();
-                WhereCondition condition = property.gt(url);
-                UrlCacheBean unique = urlCacheBeanDao.queryBuilder().where(condition).build().unique();
 
-                TooltipUtils.showToastL(activity,unique.getUrlResult());
-                List<UrlCacheBean> urlCacheBeans = urlCacheBeanDao.loadAll();
-                for (int i = 0; i < urlCacheBeans.size(); i++) {
-                    CommonUtils.LOG_D(getClass(), urlCacheBeans.get(i).getUrlResult());
-                }
+                UrlCacheBean unique = urlCacheBeanDao.queryBuilder().where(UrlCacheBeanDao.Properties.UrlMd5.eq(url)).build().unique();
+                if (null != unique)
+                    TooltipUtils.showToastL(activity, unique.getUrlResult());
             }
             break;
         }

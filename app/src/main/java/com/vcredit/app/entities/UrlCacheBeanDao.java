@@ -13,7 +13,7 @@ import org.greenrobot.greendao.database.DatabaseStatement;
 /** 
  * DAO for table "URL_CACHE_BEAN".
 */
-public class UrlCacheBeanDao extends AbstractDao<UrlCacheBean, Void> {
+public class UrlCacheBeanDao extends AbstractDao<UrlCacheBean, Long> {
 
     public static final String TABLENAME = "URL_CACHE_BEAN";
 
@@ -22,8 +22,9 @@ public class UrlCacheBeanDao extends AbstractDao<UrlCacheBean, Void> {
      * Can be used for QueryBuilder and for referencing column names.
      */
     public static class Properties {
-        public final static Property UrlMd5 = new Property(0, String.class, "urlMd5", false, "URL_MD5");
-        public final static Property UrlResult = new Property(1, String.class, "urlResult", false, "URL_RESULT");
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
+        public final static Property UrlMd5 = new Property(1, String.class, "urlMd5", false, "URL");
+        public final static Property UrlResult = new Property(2, String.class, "urlResult", false, "URLRESULT");
     }
 
 
@@ -39,8 +40,9 @@ public class UrlCacheBeanDao extends AbstractDao<UrlCacheBean, Void> {
     public static void createTable(Database db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"URL_CACHE_BEAN\" (" + //
-                "\"URL_MD5\" TEXT," + // 0: urlMd5
-                "\"URL_RESULT\" TEXT);"); // 1: urlResult
+                "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: id
+                "\"URL\" TEXT," + // 1: urlMd5
+                "\"URLRESULT\" TEXT);"); // 2: urlResult
     }
 
     /** Drops the underlying database table. */
@@ -53,14 +55,19 @@ public class UrlCacheBeanDao extends AbstractDao<UrlCacheBean, Void> {
     protected final void bindValues(DatabaseStatement stmt, UrlCacheBean entity) {
         stmt.clearBindings();
  
+        Long id = entity.getId();
+        if (id != null) {
+            stmt.bindLong(1, id);
+        }
+ 
         String urlMd5 = entity.getUrlMd5();
         if (urlMd5 != null) {
-            stmt.bindString(1, urlMd5);
+            stmt.bindString(2, urlMd5);
         }
  
         String urlResult = entity.getUrlResult();
         if (urlResult != null) {
-            stmt.bindString(2, urlResult);
+            stmt.bindString(3, urlResult);
         }
     }
 
@@ -68,52 +75,62 @@ public class UrlCacheBeanDao extends AbstractDao<UrlCacheBean, Void> {
     protected final void bindValues(SQLiteStatement stmt, UrlCacheBean entity) {
         stmt.clearBindings();
  
+        Long id = entity.getId();
+        if (id != null) {
+            stmt.bindLong(1, id);
+        }
+ 
         String urlMd5 = entity.getUrlMd5();
         if (urlMd5 != null) {
-            stmt.bindString(1, urlMd5);
+            stmt.bindString(2, urlMd5);
         }
  
         String urlResult = entity.getUrlResult();
         if (urlResult != null) {
-            stmt.bindString(2, urlResult);
+            stmt.bindString(3, urlResult);
         }
     }
 
     @Override
-    public Void readKey(Cursor cursor, int offset) {
-        return null;
+    public Long readKey(Cursor cursor, int offset) {
+        return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
     }    
 
     @Override
     public UrlCacheBean readEntity(Cursor cursor, int offset) {
         UrlCacheBean entity = new UrlCacheBean( //
-            cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0), // urlMd5
-            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1) // urlResult
+            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
+            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // urlMd5
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2) // urlResult
         );
         return entity;
     }
      
     @Override
     public void readEntity(Cursor cursor, UrlCacheBean entity, int offset) {
-        entity.setUrlMd5(cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0));
-        entity.setUrlResult(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
+        entity.setUrlMd5(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setUrlResult(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
      }
     
     @Override
-    protected final Void updateKeyAfterInsert(UrlCacheBean entity, long rowId) {
-        // Unsupported or missing PK type
-        return null;
+    protected final Long updateKeyAfterInsert(UrlCacheBean entity, long rowId) {
+        entity.setId(rowId);
+        return rowId;
     }
     
     @Override
-    public Void getKey(UrlCacheBean entity) {
-        return null;
+    public Long getKey(UrlCacheBean entity) {
+        if(entity != null) {
+            return entity.getId();
+        } else {
+            return null;
+        }
     }
 
     @Override
     public boolean hasKey(UrlCacheBean entity) {
-        // TODO
-        return false;
+        return entity.getId() != null;
     }
 
     @Override
