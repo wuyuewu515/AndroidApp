@@ -5,6 +5,7 @@ import com.vcredit.base.AbsBaseFragment;
 import com.vcredit.view.TitleBar;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * 作者: 伍跃武
@@ -15,6 +16,7 @@ import butterknife.BindView;
 public class MineFragment extends AbsBaseFragment {
     @BindView(R.id.title_mine)
     TitleBar titleMine;
+
 
     @Override
     protected int layout() {
@@ -32,4 +34,9 @@ public class MineFragment extends AbsBaseFragment {
     }
 
 
+    @OnClick(R.id.btn_loginOut)
+    public void onViewClicked() {
+
+        app.loginOut(activity);
+    }
 }

@@ -3,11 +3,8 @@ package com.vcredit.app.home;
 import android.view.View;
 
 import com.vcredit.app.R;
-import com.vcredit.app.entities.UrlCacheBean;
-import com.vcredit.app.entities.UrlCacheBeanDao;
 import com.vcredit.base.AbsBaseFragment;
 import com.vcredit.global.InterfaceConfig;
-import com.vcredit.utils.EncryptUtils;
 import com.vcredit.utils.HttpUtil;
 import com.vcredit.utils.TooltipUtils;
 import com.vcredit.utils.net.AbsRequestListener;
@@ -31,10 +28,6 @@ public class HomeFragment extends AbsBaseFragment {
     @BindView(R.id.title_home)
     TitleBar titleHome;
 
-
-    private UrlCacheBeanDao urlCacheBeanDao;
-    private String url;
-
     @Override
     protected int layout() {
         return R.layout.main_start_fragment;
@@ -47,8 +40,7 @@ public class HomeFragment extends AbsBaseFragment {
 
     @Override
     protected void dataBind() {
-        urlCacheBeanDao = app.getDaoSession().getUrlCacheBeanDao();
-        url = EncryptUtils.md5(HttpUtil.getServiceUrl(InterfaceConfig.HOME));
+
     }
 
 
@@ -58,32 +50,23 @@ public class HomeFragment extends AbsBaseFragment {
 
             case R.id.btn_getMesage: {
                 Map<String, String> map = new HashMap<>();
-                map.put("password", "should");
+                map.put("password", "456");
 
-                httpUtil.doPostByString(HttpUtil.getServiceUrl(InterfaceConfig.HOME), map, new AbsRequestListener(activity) {
+                httpUtil.setNeedCache(true).doPostByString(HttpUtil.getServiceUrl(InterfaceConfig.HOME), map, new AbsRequestListener(activity) {
                     @Override
                     public void onSuccess(String result) {
                         TooltipUtils.showToastL(activity, result);
 
-                        //如果数据库中有这个数据，就更新
-                        UrlCacheBean unique = urlCacheBeanDao.queryBuilder().where(UrlCacheBeanDao.Properties.UrlMd5.eq(url)).build().unique();
-                        UrlCacheBean bean;
-                        if (null != unique) {
-                            long id = unique.getId();
-                            bean = new UrlCacheBean(id, url, result);
-                        } else {
-                            bean = new UrlCacheBean(null, url, result);
-                        }
-                        urlCacheBeanDao.save(bean);
+
                     }
                 });
             }
             break;
             case R.id.btn_showMessage: {
-
-                UrlCacheBean unique = urlCacheBeanDao.queryBuilder().where(UrlCacheBeanDao.Properties.UrlMd5.eq(url)).build().unique();
-                if (null != unique)
-                    TooltipUtils.showToastL(activity, unique.getUrlResult());
+//
+//                UrlCacheBean unique = urlCacheBeanDao.queryBuilder().where(UrlCacheBeanDao.Properties.UrlMd5.eq(url)).build().unique();
+//                if (null != unique)
+//                    TooltipUtils.showToastL(activity, unique.getUrlResult());
             }
             break;
         }

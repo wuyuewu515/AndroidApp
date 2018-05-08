@@ -1,17 +1,24 @@
 package com.vcredit.utils;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Entity;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
+import android.support.v4.app.ActivityCompat;
 import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.vcredit.app.R;
+import com.vcredit.app.entities.UrlCacheBean;
+import com.vcredit.app.entities.UrlCacheBeanDao;
 import com.vcredit.global.InterfaceConfig;
+import com.vcredit.global.SampleApplicationLike;
 import com.vcredit.utils.net.GetJsonRequest;
 import com.vcredit.utils.net.IMErrorListenr;
 import com.vcredit.utils.net.IMJsonListener;
@@ -47,6 +54,8 @@ public class HttpUtil {
      * 会话识别号
      */
     public static String sessionId = "0000";
+
+    private boolean needChache = false;
 
     /***
      * 构造函数
@@ -158,25 +167,52 @@ public class HttpUtil {
      */
     public Request<String> doPostByString(String url, Map<String, String> pramas,
                                           RequestListener requestListener, boolean isOpenProgressbar) {
-        // 网络检查
-        if (!checkNetState(context)) {
-            Toast.makeText(context, R.string.net_error_check, Toast.LENGTH_SHORT)
-                    .show();
-            return null;
-        }
 
         //添加固定的参数
         pramas.put("token", "");
 
+        // 网络检查
+        if (!checkNetState(context)) {
+            if (needChache) { //需要缓存的接口，直接从接口文档中返回数据
+                getDataFromLocal(url, pramas, requestListener);
+            } else {
+                Toast.makeText(context, R.string.net_error_check, Toast.LENGTH_SHORT)
+                        .show();
+            }
+            return null;
+        }
+
+
         isShowProgressDialog(isOpenProgressbar);
 
-        PostStringRequest stringRequest = new PostStringRequest(url, pramas, new IMStringListener(requestListener,context),
-                new IMErrorListenr(requestListener));
+        PostStringRequest stringRequest = new PostStringRequest(url, pramas, new IMStringListener(requestListener, context),
+                new IMErrorListenr(requestListener), needChache);
+        stringRequest.setShouldCache(true);
         Request<String> request = queue.add(stringRequest);
 
         // 为请求添加context标记
         request.setTag(context);
         return request;
+    }
+
+    /**
+     * 从本地读取缓存数据
+     * @param url 服务器请求地址
+     * @param pramas 参数字段
+     * @param requestListener 返回成功的监听
+     */
+    private void getDataFromLocal(String url, Map<String, String> pramas, RequestListener requestListener) {
+        String paramsMd5 = EncryptUtils.md5_16(pramas.toString());
+        String urlMd5 = EncryptUtils.md5_16(url);
+        String keyMd5 = paramsMd5 + urlMd5;
+        UrlCacheBeanDao urlCacheBeanDao = SampleApplicationLike.getInstance().getDaoSession().getUrlCacheBeanDao();
+        UrlCacheBean cacheBean = urlCacheBeanDao.queryBuilder().where(UrlCacheBeanDao.Properties.UrlMd5.eq(keyMd5)).build().unique();
+        if (null != cacheBean) {
+            new IMStringListener(requestListener, context).onResponse(cacheBean.getUrlResult());
+        } else {
+            Toast.makeText(context, R.string.net_error_check, Toast.LENGTH_SHORT)
+                    .show();
+        }
     }
 
     /**
@@ -290,4 +326,38 @@ public class HttpUtil {
         }
         return params;
     }
+
+    /**
+     * 是否需要缓存当前接口数据
+     *
+     * @param needCache true --需要缓存 false --不需要缓存
+     * @return
+     */
+    public HttpUtil setNeedCache(boolean needCache) {
+        if (verifyStoragePermissions((Activity) context)) {
+            this.needChache = needCache;
+        }
+        return this;
+    }
+
+    private static String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE};
+
+    public boolean verifyStoragePermissions(Activity activity) {
+        // Check if we have write permission
+        int permission = ActivityCompat.checkSelfPermission(activity,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(activity, PERMISSIONS_STORAGE,
+                    100);
+
+            return false;
+        }
+        return true;
+    }
+
+
 }

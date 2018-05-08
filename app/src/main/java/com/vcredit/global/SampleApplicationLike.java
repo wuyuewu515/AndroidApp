@@ -20,6 +20,7 @@ import com.tencent.tinker.loader.app.DefaultApplicationLike;
 import com.umeng.analytics.MobclickAgent;
 import com.vcredit.app.entities.DaoMaster;
 import com.vcredit.app.entities.DaoSession;
+import com.vcredit.app.main.login.LoginActivity;
 import com.vcredit.utils.CommonUtils;
 import com.vcredit.utils.TooltipUtils;
 
@@ -233,6 +234,24 @@ public class SampleApplicationLike extends DefaultApplicationLike {
         return db;
     }
 
+    /**
+     * 退出登录
+     */
+    public void loginOut(Context context) {
+        isLogined = false;
+        //清除数据库数据
+        mDaoSession.getUrlCacheBeanDao().deleteAll();
+
+        finishAllActivity();
+        //页面跳转
+        Intent intent = new Intent(context, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("GOTO", 3);
+        context.startActivity(intent);
+
+        TooltipUtils.showToastL(context, "成功退出登录", 500);
+
+    }
 
     /**
      * 获得当前App版本号

@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.vcredit.app.BuildConfig;
 import com.vcredit.app.R;
 import com.vcredit.app.entities.UserData;
 import com.vcredit.app.main.MainActivity;
@@ -57,10 +56,8 @@ public class LoginActivity extends AbsBaseActivity implements TextWatcher {
         etPassword.addTextChangedListener(this);
         btnLogin.setEnabled(!isTextViewHasNull(etPhone, etPassword));
 
-        TooltipUtils.showToastL(mActivity, "当前的版本是" + BuildConfig.DEBUG + ",渠道号为:" + SampleApplicationLike.channel);
-
-//        if (InterfaceConfig.ISDEBUG)
-//            TooltipUtils.showToastL(mActivity, "当前的渠道号为:" + SampleApplicationLike.channel);
+        if (InterfaceConfig.ISDEBUG)
+            TooltipUtils.showToastL(mActivity, "当前的渠道号为:" + SampleApplicationLike.channel);
     }
 
     protected boolean inputCheck() {

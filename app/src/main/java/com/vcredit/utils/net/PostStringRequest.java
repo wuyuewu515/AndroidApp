@@ -1,9 +1,19 @@
 package com.vcredit.utils.net;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
+
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
+import com.vcredit.app.entities.UrlCacheBean;
+import com.vcredit.app.entities.UrlCacheBeanDao;
 import com.vcredit.global.InterfaceConfig;
+import com.vcredit.global.SampleApplicationLike;
+import com.vcredit.utils.CommonUtils;
 import com.vcredit.utils.EncryptUtils;
 
 import java.io.UnsupportedEncodingException;
@@ -19,10 +29,20 @@ import java.util.Map;
 
 public class PostStringRequest extends StringRequest {
     private Map<String, String> mParams = new HashMap<>();
+    private boolean needCache = false;
 
-    public PostStringRequest(String url, Map<String, String> params, Response.Listener<String> listener, Response.ErrorListener errorListener) {
+    /**
+     * @param url           请求服务器地址
+     * @param params        参数
+     * @param listener      成功监听
+     * @param errorListener 错误监听
+     * @param needCache     是否需要本地缓存
+     */
+    public PostStringRequest(String url, Map<String, String> params, Response.Listener<String> listener,
+                             Response.ErrorListener errorListener, boolean needCache) {
         super(Method.POST, url, listener, errorListener);
         this.mParams = params;
+        this.needCache = needCache;
     }
 
 
@@ -70,4 +90,28 @@ public class PostStringRequest extends StringRequest {
     public Map<String, String> getParams() {
         return mParams;
     }
+
+    @Override
+    protected void deliverResponse(String response) {
+
+        if (needCache) {
+            UrlCacheBeanDao urlCacheBeanDao = SampleApplicationLike.getInstance().getDaoSession().getUrlCacheBeanDao();
+            String paramsMd5 = EncryptUtils.md5_16(getParams().toString());
+            String urlMd5 = EncryptUtils.md5_16(getUrl());
+            String keyMd5 = paramsMd5 + urlMd5;
+            //如果数据库中有这个数据，就更新
+            UrlCacheBean unique = urlCacheBeanDao.queryBuilder().where(UrlCacheBeanDao.Properties.UrlMd5.eq(keyMd5)).build().unique();
+            UrlCacheBean bean;
+            if (null != unique) {
+                long id = unique.getId();
+                bean = new UrlCacheBean(id, keyMd5, response);
+            } else {
+                bean = new UrlCacheBean(null, keyMd5, response);
+            }
+            urlCacheBeanDao.save(bean);
+        }
+        super.deliverResponse(response);
+    }
+
+
 }
