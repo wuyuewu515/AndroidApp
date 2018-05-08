@@ -1,19 +1,13 @@
 package com.vcredit.utils.net;
 
-import android.Manifest;
-import android.app.Activity;
-import android.content.pm.PackageManager;
-import android.support.v4.app.ActivityCompat;
-
 import com.android.volley.AuthFailureError;
-import com.android.volley.NetworkResponse;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
 import com.vcredit.app.entities.UrlCacheBean;
 import com.vcredit.app.entities.UrlCacheBeanDao;
 import com.vcredit.global.InterfaceConfig;
 import com.vcredit.global.SampleApplicationLike;
-import com.vcredit.utils.CommonUtils;
 import com.vcredit.utils.EncryptUtils;
 
 import java.io.UnsupportedEncodingException;
@@ -43,6 +37,7 @@ public class PostStringRequest extends StringRequest {
         super(Method.POST, url, listener, errorListener);
         this.mParams = params;
         this.needCache = needCache;
+        setRetryPolicy(new DefaultRetryPolicy(InterfaceConfig.SOCKET_TIMEOUT, InterfaceConfig.MAX_RETRIES, InterfaceConfig.BACK_OFF));
     }
 
 

@@ -125,8 +125,22 @@ public class HttpUtil {
                                             RequestListener requestListener, boolean isOpenProgressbar) {
         // 网络检查
         if (!checkNetState(context)) {
+            if (needChache) {
+                String paramsMd5 = EncryptUtils.md5_16(jsonObject.toString());
+                String urlMd5 = EncryptUtils.md5_16(url);
+                String keyMd5 = paramsMd5 + urlMd5;
+                UrlCacheBeanDao urlCacheBeanDao = SampleApplicationLike.getInstance().getDaoSession().getUrlCacheBeanDao();
+                UrlCacheBean cacheBean = urlCacheBeanDao.queryBuilder().where(UrlCacheBeanDao.Properties.UrlMd5.eq(keyMd5)).build().unique();
+                if (null != cacheBean) {
+                    new IMStringListener(requestListener, context).onResponse(cacheBean.getUrlResult());
+                } else {
+                    Toast.makeText(context, R.string.net_error_check, Toast.LENGTH_SHORT)
+                            .show();
+                }
+            }
             Toast.makeText(context, R.string.net_error_check, Toast.LENGTH_SHORT)
                     .show();
+
             return null;
         }
 
@@ -135,8 +149,8 @@ public class HttpUtil {
         CommonUtils.LOG_D(getClass(), "url = %s,  params = %s", url, jsonObject.toString());
         Request<JSONObject> request = queue.add(new PostJsonRequest(url, jsonObject,
                 new IMJsonListener(requestListener, context),
-                new IMErrorListenr(requestListener)));
-
+                new IMErrorListenr(requestListener), needChache));
+        needChache = false;
         // 为请求添加context标记
         request.setTag(context);
         return request;
@@ -179,6 +193,9 @@ public class HttpUtil {
                 Toast.makeText(context, R.string.net_error_check, Toast.LENGTH_SHORT)
                         .show();
             }
+            Toast.makeText(context, R.string.net_error_check, Toast.LENGTH_SHORT)
+                    .show();
+
             return null;
         }
 
@@ -189,7 +206,7 @@ public class HttpUtil {
                 new IMErrorListenr(requestListener), needChache);
         stringRequest.setShouldCache(true);
         Request<String> request = queue.add(stringRequest);
-
+        needChache = false; //将需要缓存重置为false
         // 为请求添加context标记
         request.setTag(context);
         return request;
@@ -197,8 +214,9 @@ public class HttpUtil {
 
     /**
      * 从本地读取缓存数据
-     * @param url 服务器请求地址
-     * @param pramas 参数字段
+     *
+     * @param url             服务器请求地址
+     * @param pramas          参数字段
      * @param requestListener 返回成功的监听
      */
     private void getDataFromLocal(String url, Map<String, String> pramas, RequestListener requestListener) {
