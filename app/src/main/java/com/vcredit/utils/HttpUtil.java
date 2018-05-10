@@ -9,6 +9,7 @@ import android.content.Entity;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.support.v4.app.ActivityCompat;
+import android.webkit.WebView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -145,11 +146,12 @@ public class HttpUtil {
         }
 
         isShowProgressDialog(isOpenProgressbar);
-
-        CommonUtils.LOG_D(getClass(), "url = %s,  params = %s", url, jsonObject.toString());
-        Request<JSONObject> request = queue.add(new PostJsonRequest(url, jsonObject,
+        String userAgent = System.getProperty("http.agent");
+        PostJsonRequest postJsonRequest = new PostJsonRequest(url, jsonObject,
                 new IMJsonListener(requestListener, context),
-                new IMErrorListenr(requestListener), needChache));
+                new IMErrorListenr(requestListener), needChache);
+        postJsonRequest.setUserAgent(userAgent);
+        Request<JSONObject> request = queue.add(postJsonRequest);
         needChache = false;
         // 为请求添加context标记
         request.setTag(context);
@@ -198,12 +200,14 @@ public class HttpUtil {
 
             return null;
         }
+        String userAgent = System.getProperty("http.agent");
 
 
         isShowProgressDialog(isOpenProgressbar);
 
         PostStringRequest stringRequest = new PostStringRequest(url, pramas, new IMStringListener(requestListener, context),
                 new IMErrorListenr(requestListener), needChache);
+        stringRequest.setUserAgent(userAgent);
         stringRequest.setShouldCache(true);
         Request<String> request = queue.add(stringRequest);
         needChache = false; //将需要缓存重置为false

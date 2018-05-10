@@ -24,6 +24,8 @@ import java.util.Map;
 public class PostStringRequest extends StringRequest {
     private Map<String, String> mParams = new HashMap<>();
     private boolean needCache = false;
+    private String useragent;
+
 
     /**
      * @param url           请求服务器地址
@@ -64,6 +66,7 @@ public class PostStringRequest extends StringRequest {
         long currentTime = System.currentTimeMillis();
         headers.put("client-time", currentTime + "");
         headers.put("platform", "android");
+        headers.put("User-Agent", useragent);
         String result = "access-key=VaReBQn0BVxBoCWqsFmBVvJz3mukQs1U&client-time=" + currentTime + "&platform=android";
         String md5Sign = "";
         try {
@@ -108,5 +111,13 @@ public class PostStringRequest extends StringRequest {
         super.deliverResponse(response);
     }
 
+    /**
+     * 设置ua
+     * @param useragent ua
+     */
+    public void setUserAgent(String useragent) {
+        this.useragent = useragent;
+
+    }
 
 }

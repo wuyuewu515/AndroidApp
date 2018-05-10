@@ -29,6 +29,7 @@ public class PostJsonRequest extends JsonObjectRequest {
 
     private boolean needCache = false;
     private JSONObject params;
+    private String useragent;
 
     /**
      * 构造函数，初始化请求对象
@@ -58,6 +59,7 @@ public class PostJsonRequest extends JsonObjectRequest {
         headers.put("Charsert", getParamsEncoding());
         headers.put("Content-Type", "application/json;charset=utf-8");
         headers.put("Accept-Encoding", "gzip,deflate");
+        headers.put("User-Agent", useragent);
         headers.put("Accept-Language", "zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3");
         if (!CommonUtils.isNullOrEmpty(HttpUtil.sessionId))
             headers.put("x-auth-token", HttpUtil.sessionId);
@@ -98,4 +100,8 @@ public class PostJsonRequest extends JsonObjectRequest {
         return superResponse;
     }
 
+    public void setUserAgent(String useragent) {
+        this.useragent = useragent;
+
+    }
 }

@@ -56,3 +56,5 @@ freeline/
 freeline_project_description.json
 /app/release/output.json
 /app/release
+/.idea
+/gradle
